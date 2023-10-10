@@ -8,7 +8,9 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import '/public/iconfont.css'
 
-import { ElButton, ElContainer, ElInput } from 'element-plus'
+import { ElButton, ElContainer, ElInput,ElCard } from 'element-plus'
+
+
 
 
 
@@ -17,3 +19,6 @@ app.use(ElementPlus)
 app.use(router)
 
 app.mount('#app')
+
+
+

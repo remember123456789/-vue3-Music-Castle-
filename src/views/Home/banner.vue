@@ -1,40 +1,42 @@
 <template>
-  <swiper :slides-per-view="3" :space-between="50" @swiper="onSwiper" @slideChange="onSlideChange">
-    <swiper-slide>Slide 1</swiper-slide>
-    <swiper-slide>Slide 2</swiper-slide>
-    <swiper-slide>Slide 3</swiper-slide>
-    ...
+  <swiper :modules="modules" :slides-per-view="4" :space-between="50" Navigation :pagination="{ clickable: true }">
+    <swiper-slide v-for="(item, index) in banner.value" :key="index"><img :src="item.imageUrl" alt=""></swiper-slide>
   </swiper>
 </template>
-<script>
+<script setup lang="ts">
+// Import Swiper Vue.js components
+import { Navigation, Pagination } from 'swiper/modules';
+import { ref, reactive } from 'vue'
+import { onMounted } from 'vue';
+import { getbanner } from '@/api/server.js'
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from 'swiper/vue';
 
+const modules = [Navigation, Pagination]
+let banner: any = reactive([])
 // Import Swiper styles
-import 'swiper/css';
+import 'swiper/css'
+import 'swiper/scss/navigation';
+import 'swiper/scss/pagination';
 
-export default {
-  components: {
-    Swiper,
-    SwiperSlide,
-  },
-  setup() {
-    const onSwiper = (swiper) => {
-      console.log(swiper);
-    };
-    const onSlideChange = () => {
-      console.log('slide change');
-    };
-    return {
-      onSwiper,
-      onSlideChange,
-    };
-  },
-};
+
+const getban = async function () {
+  const result = await getbanner()
+  if (result.code == 200) {
+    //  console.log(result);
+    banner.value = result.banners
+  }
+}
+
+onMounted(() => {
+  getban().then(() => {
+    console.log(banner.value);  // 输出响应式数组的值需要在 async 函数中完成  
+  });
+})
 
 
 </script>
-<style scoped >
+<style scoped  lang="scss">
 html,
 body {
   position: relative;
@@ -51,11 +53,17 @@ body {
 }
 
 .swiper {
+  padding: 40px 0;
   width: 100%;
   height: 100%;
+
+
 }
 
 .swiper-slide {
+  width: 240px;
+  height: 89px;
+  border-radius: 10px;
   text-align: center;
   font-size: 18px;
   background: #fff;
@@ -80,5 +88,6 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 10px;
 }
 </style>
