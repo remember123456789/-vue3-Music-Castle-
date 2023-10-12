@@ -3,6 +3,7 @@
     <swiper-slide v-for="(item, index) in banner.value" :key="index"><img :src="item.imageUrl" alt=""></swiper-slide>
   </swiper>
 </template>
+
 <script setup lang="ts">
 // Import Swiper Vue.js components
 import { Navigation, Pagination } from 'swiper/modules';
@@ -19,7 +20,6 @@ import 'swiper/css'
 import 'swiper/scss/navigation';
 import 'swiper/scss/pagination';
 
-
 const getban = async function () {
   const result = await getbanner()
   if (result.code == 200) {
@@ -33,6 +33,8 @@ onMounted(() => {
     console.log(banner.value);  // 输出响应式数组的值需要在 async 函数中完成  
   });
 })
+
+
 
 
 </script>

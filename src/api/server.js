@@ -6,5 +6,15 @@ export const getbanner = () => {
         url: '/banner',
         method: 'get'
     })
+}
 
+export const selectmusic = ({ limit, order, cat }) => {
+    return service({
+        url: '/top/playlist',
+        params: {
+            limit,
+            order,
+            cat
+        }
+    })
 }
