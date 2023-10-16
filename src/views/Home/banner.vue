@@ -1,6 +1,7 @@
 <template>
   <swiper :modules="modules" :slides-per-view="4" :space-between="50" Navigation :pagination="{ clickable: true }">
-    <swiper-slide v-for="(item, index) in banner.value" :key="index"><img :src="item.imageUrl" alt=""></swiper-slide>
+    <swiper-slide @click="changeMenu(item)" v-for="(item, index) in banner.value" :key="index"><img :src="item.imageUrl"
+        alt=""></swiper-slide>
   </swiper>
 </template>
 
@@ -27,16 +28,15 @@ const getban = async function () {
     banner.value = result.banners
   }
 }
+const changeMenu = (item) => {
+
+  window.location.assign(item.url);
+}
 
 onMounted(() => {
-  getban().then(() => {
-    console.log(banner.value);  // 输出响应式数组的值需要在 async 函数中完成  
+  getban().then(() => { // 输出响应式数组的值需要在 async 函数中完成  
   });
 })
-
-
-
-
 </script>
 <style scoped  lang="scss">
 html,
@@ -83,6 +83,7 @@ body {
   -ms-flex-align: center;
   -webkit-align-items: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .swiper-slide img {

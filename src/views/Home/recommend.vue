@@ -12,8 +12,17 @@
                 </li>
             </ul>
 
+            <!-- <div class="playlist">
+                <router-link v-for="item in playList" :key="item.id" :to="{ name: 'playlist', query: { id: item.id } }"
+                    :class="['link']">
+                    <img :src="item.coverImgUrl" alt="">
+                    <span>{{ item.name }}</span>
+                </router-link>
+            </div> -->
+
             <div class="playlist">
-                <router-link v-for="item in playList" :to="{ name: 'playlist', query: { id: item.id } }" :class="['link']">
+                <router-link v-for="item in playList" :key="item.id" :to="{ name: 'playlist', query: { id: item.id } }"
+                    :class="['link']">
                     <img :src="item.coverImgUrl" alt="">
                     <span>{{ item.name }}</span>
                 </router-link>
@@ -21,11 +30,12 @@
         </div>
     </el-card>
 </template>
-<script setup lang="ts">
-import { ref, reactive, onMounted, watch, onBeforeMount, onUpdated, nextTick } from 'vue';
+<script setup >
+import { ref, reactive, onMounted, nextTick, getCurrentInstance } from 'vue';
 // const instance = getCurrentInstance();
-import { selectmusic } from '@/api/server.js'
 
+const { proxy } = getCurrentInstance();
+console.log(proxy);
 let para = reactive({
     limit: 6,
     order: 'hot',
@@ -66,40 +76,41 @@ let tabs = reactive([
 
 ])
 
-let playList = reactive([])
-
-
+let playList = ref([])
 
 //切换导航栏按钮
 const changetitle = (item) => {
     for (let i = 0; i < tabs.length; i++) {
         tabs[i].current = 0;
     }
-
     item.current = 1
-
     para.cat = item.name
     getrcommed(para)
-
 }
 
-const getrcommed = async (params) => {
-    let result = await selectmusic(params)
-
-    if (result.code == 200) {
-        playList = result.playlists
-        
+let getrcommed = async (params) => {
+    //捕获异常错误
+    try {
+        // let result = await selectmusic(params)
+        console.log(proxy.$http);
+        let result=await proxy.$http.selectmusic(params)
+        if (result.code == 200) {
+            playList = result.playlists
+        }
+    } catch (error) {
+        alert(error.toString())
     }
-
 }
 
-
+getrcommed(para).then((res) => {
+    console.log(res);
+})
 
 onMounted(() => {
     getrcommed(para)
-    // 这里的代码将会在 DOM 更新后执行  
 })
 
+console.log(playList);
 
 </script>
 <style scoped lang="scss">
