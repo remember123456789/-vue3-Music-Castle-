@@ -5,23 +5,15 @@
                 <h1 style="font-size: 28px;color: #2D2D2D;">热门推荐</h1>
             </span>
             <ul class="nav">
-                <li v-for="(item, index) in tabs" @click.prevent="changetitle(item)"
-                    :class="{ 'title-active': item.current == 1 }">
+                <li v-for="(item, index) in playListinfo.playListTags" @click.prevent="changetitle(index)"
+                    :class="{ 'title-active': index == playListinfo.playList_index }">
                     {{ item.name }}
                     <span></span>
                 </li>
             </ul>
 
-            <!-- <div class="playlist">
-                <router-link v-for="item in playList" :key="item.id" :to="{ name: 'playlist', query: { id: item.id } }"
-                    :class="['link']">
-                    <img :src="item.coverImgUrl" alt="">
-                    <span>{{ item.name }}</span>
-                </router-link>
-            </div> -->
-
             <div class="playlist">
-                <router-link v-for="item in playList" :key="item.id" :to="{ name: 'playlist', query: { id: item.id } }"
+                <router-link v-for="item in playListinfo.playList"  :to="{ name: 'playlist', query: { id: item.id } }"
                     :class="['link']">
                     <img :src="item.coverImgUrl" alt="">
                     <span>{{ item.name }}</span>
@@ -31,86 +23,54 @@
     </el-card>
 </template>
 <script setup >
-import { ref, reactive, onMounted, nextTick, getCurrentInstance } from 'vue';
+import { ref, reactive, onMounted, getCurrentInstance } from 'vue';
 // const instance = getCurrentInstance();
 
 const { proxy } = getCurrentInstance();
-console.log(proxy);
-let para = reactive({
-    limit: 6,
-    order: 'hot',
-    cat: '为你推荐'
+
+let playListinfo = reactive({
+    playListTags: [],
+    playList_index: 0,
+    playList_params: { limit: 6, order: 'hot' },
+    playList: []
 })
+//获取导航栏
+const getTabs = async () => {
+    let result = await proxy.$http.selectMenu()
 
+    if (result.code !== 200) return proxy.$mes.error("数据请求失败")
 
-let tabs = reactive([
-    {
-        name: '为你推荐',
-        current: 1,
-    },
-    {
-        name: '华语',
-        current: 0,
-
-    },
-    {
-        name: '流行',
-        current: 0,
-
-    },
-    {
-        name: '摇滚',
-        current: 0,
-
-    },
-    {
-        name: '民谣',
-        current: 0,
-
-    },
-    {
-        name: '电子',
-        current: 0,
-
-    },
-
-])
-
-let playList = ref([])
+    try {
+        result.tags.unshift({ name: "为你推荐" })
+        playListinfo['playListTags'] = result.tags.splice(0, 6)
+    } catch (error) {
+        alert(new Error(error.message))
+    }
+}
 
 //切换导航栏按钮
-const changetitle = (item) => {
-    for (let i = 0; i < tabs.length; i++) {
-        tabs[i].current = 0;
-    }
-    item.current = 1
-    para.cat = item.name
-    getrcommed(para)
+const changetitle = (index) => {
+    playListinfo['playList_index'] = index
+    playListinfo['playList_params']['cat'] = playListinfo['playListTags'][index]['name']
+    getrcommed(playListinfo['playList_params'])
 }
-
+//获取歌单
 let getrcommed = async (params) => {
-    //捕获异常错误
+    let result = await proxy.$http.selectmusic(params)
+    if (result.code !== 200) return proxy.$mes.error("获取数据失败")
+    console.log(result);
     try {
-        // let result = await selectmusic(params)
-        console.log(proxy.$http);
-        let result=await proxy.$http.selectmusic(params)
-        if (result.code == 200) {
-            playList = result.playlists
-        }
+        playListinfo['playList'] = result.playlists
     } catch (error) {
-        alert(error.toString())
+        alert(new Error(error.message))
     }
 }
-
-getrcommed(para).then((res) => {
-    console.log(res);
-})
 
 onMounted(() => {
-    getrcommed(para)
+    getrcommed(playListinfo['playList_params'])
+    getTabs()
 })
 
-console.log(playList);
 
 </script>
 <style scoped lang="scss">
@@ -133,10 +93,12 @@ console.log(playList);
 
             .link {
                 display: block;
-                width: 129px;
-                height: 129px;
+                width: 135px;
+                height: 135px;
                 padding: 10px 40px 20px 0;
-
+              
+                text-decoration: none;
+                cursor: pointer;
                 // background-color: aqua;c
                 img {
                     width: 100%;
@@ -164,9 +126,10 @@ console.log(playList);
     .nav {
         display: flex;
         margin-left: 50px;
-        cursor: pointer;
+        
 
         li {
+            cursor: pointer;
             display: inline-block;
             font-size: 16px;
             color: #2D2D2D;
