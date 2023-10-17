@@ -1,5 +1,5 @@
 <template>
-    <div class="hea-top">
+    <div class="hea-top" style="height: 90vh; overflow: hidden;position: fixed;">
         <div class="hea-left">
             <router-link to="/">
                 <img src="../assets/login.jpg" alt="">

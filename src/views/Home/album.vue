@@ -10,7 +10,6 @@
                     :class="{ 'title-active': index == albuminfo['album_index'] }">{{ item.name }}</li>
             </div>
 
-
             <div class="album_list">
                 <div class="album" v-for="item in albuminfo.album_List">
                     <div class="album-img">
@@ -23,7 +22,6 @@
                     </div>
                 </div>
             </div>
-
 
         </div>
 
@@ -61,7 +59,6 @@ const getAblum = async (params: { limit: number }) => {
 
     try {
         albuminfo['album_List'] = result.weekData.splice(0, 12)
-        console.log(albuminfo['album_List']);
     } catch (error) {
         // alert(new Error(error.message))
     }

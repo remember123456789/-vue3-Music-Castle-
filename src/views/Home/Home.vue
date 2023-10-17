@@ -3,6 +3,7 @@
         <Banner></Banner>
         <recommed></recommed>
         <Album></Album>
+        <Top></Top>
         我是HOME
 
     </div>
@@ -12,7 +13,7 @@ import { ref, reactive } from 'vue';
 import Banner from './banner.vue'
 import recommed from './recommend.vue'
 import Album from './album.vue'
-
+import Top from './Top.vue'
 
 </script>
 <style scoped lang="ts">

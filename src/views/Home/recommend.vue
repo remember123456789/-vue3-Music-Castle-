@@ -67,7 +67,7 @@ const changetitle = (index: number) => {
 let getrcommed = async (params: { limit: number, order: string, cat?: string }) => {
     let result: any = await proxy.$http.selectmusic(params)
     if (result.code !== 200) return proxy.$mes.error("获取数据失败")
-    console.log(result);
+
     try {
         playListinfo['playList'] = result.playlists
     } catch (error) {

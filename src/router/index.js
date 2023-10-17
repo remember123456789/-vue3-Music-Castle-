@@ -19,11 +19,18 @@ const router = createRouter({
     },
     {
       path: '/mv',
+      name:'mv',
       component: () => import('@/views/MV/mv.vue')
     },
     {
       path: '/singer',
+      name:'singer',
       component: () => import('@/views/Singer/singer.vue')
+    },
+    {
+       path:'/song',
+       name:'song',
+       component:()=>import('@/views/song/song.vue')
     }
 
   ]
