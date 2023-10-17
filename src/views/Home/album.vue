@@ -30,26 +30,33 @@
     </el-card>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 import { ref, reactive, getCurrentInstance, onMounted } from 'vue';
 
-const { proxy } = getCurrentInstance();
+const { proxy }: any = getCurrentInstance();
 
-let albuminfo = reactive({
+interface albumINfo {
+    album_Menu: Array<{ name: string, code: string }>
+    album_params: { limit: number },
+    album_index: number,
+    album_List: Array<any>
+}
+
+let albuminfo: albumINfo = reactive({
     album_Menu: proxy.$common.EV_ALBUM,
     album_params: { limit: 12 },
     album_index: 0,
     album_List: []
 })
 
-const changeMenu = (index) => {
+const changeMenu = (index: number) => {
     albuminfo['album_index'] = index
 }
 
 //获取专辑
-const getAblum = async (params) => {
-    let result = await proxy.$http.getAblum(params)
+const getAblum = async (params: { limit: number }) => {
+    let result: any = await proxy.$http.getAblum(params)
     if (result.code !== 200) return proxy.$mes.error("请求数据失败")
 
     try {
@@ -117,7 +124,7 @@ onMounted(() => {
         }
 
         .album_list {
-          
+
             width: 1109px;
             height: 316px;
 
@@ -125,7 +132,7 @@ onMounted(() => {
             flex-wrap: wrap;
 
             .album {
-                  cursor: pointer;
+                cursor: pointer;
                 display: flex;
                 width: 237px;
                 height: 78px;

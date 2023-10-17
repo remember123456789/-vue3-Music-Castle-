@@ -29,7 +29,6 @@ const getban = async function () {
   }
 }
 const changeMenu = (item) => {
-
   window.location.assign(item.url);
 }
 

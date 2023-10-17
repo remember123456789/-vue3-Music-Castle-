@@ -13,7 +13,7 @@
             </ul>
 
             <div class="playlist">
-                <router-link v-for="item in playListinfo.playList"  :to="{ name: 'playlist', query: { id: item.id } }"
+                <router-link v-for="item in playListinfo.playList" :to="{ name: 'playlist', query: { id: item.id } }"
                     :class="['link']">
                     <img :src="item.coverImgUrl" alt="">
                     <span>{{ item.name }}</span>
@@ -22,21 +22,30 @@
         </div>
     </el-card>
 </template>
-<script setup >
+<script setup lang="ts">
 import { ref, reactive, onMounted, getCurrentInstance } from 'vue';
-// const instance = getCurrentInstance();
 
-const { proxy } = getCurrentInstance();
+const { proxy }: any = getCurrentInstance();
 
-let playListinfo = reactive({
+interface play {
+    playListTags: Array<{ name: string }>,
+    playList_index: number,
+    playList_params: { limit: number, order: string, cat?: string }
+    playList: Array<any>
+}
+
+
+let playListinfo: play = reactive({
     playListTags: [],
     playList_index: 0,
     playList_params: { limit: 6, order: 'hot' },
     playList: []
 })
+
+
 //获取导航栏
 const getTabs = async () => {
-    let result = await proxy.$http.selectMenu()
+    let result: any = await proxy.$http.selectMenu()
 
     if (result.code !== 200) return proxy.$mes.error("数据请求失败")
 
@@ -49,14 +58,14 @@ const getTabs = async () => {
 }
 
 //切换导航栏按钮
-const changetitle = (index) => {
+const changetitle = (index: number) => {
     playListinfo['playList_index'] = index
     playListinfo['playList_params']['cat'] = playListinfo['playListTags'][index]['name']
     getrcommed(playListinfo['playList_params'])
 }
 //获取歌单
-let getrcommed = async (params) => {
-    let result = await proxy.$http.selectmusic(params)
+let getrcommed = async (params: { limit: number, order: string, cat?: string }) => {
+    let result: any = await proxy.$http.selectmusic(params)
     if (result.code !== 200) return proxy.$mes.error("获取数据失败")
     console.log(result);
     try {
@@ -96,9 +105,10 @@ onMounted(() => {
                 width: 135px;
                 height: 135px;
                 padding: 10px 40px 20px 0;
-              
+
                 text-decoration: none;
                 cursor: pointer;
+
                 // background-color: aqua;c
                 img {
                     width: 100%;
@@ -126,7 +136,7 @@ onMounted(() => {
     .nav {
         display: flex;
         margin-left: 50px;
-        
+
 
         li {
             cursor: pointer;
