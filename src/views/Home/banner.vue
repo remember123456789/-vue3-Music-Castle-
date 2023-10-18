@@ -5,7 +5,7 @@
   </swiper>
 </template>
 
-<script setup lang="ts">
+<script setup >
 // Import Swiper Vue.js components
 import { Navigation, Pagination } from 'swiper/modules';
 import { ref, reactive } from 'vue'
@@ -13,9 +13,9 @@ import { onMounted } from 'vue';
 import { getbanner } from '@/api/server.js'
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from 'swiper/vue';
-
+import { useRoute, useRouter } from 'vue-router';
 const modules = [Navigation, Pagination]
-let banner: any = reactive([])
+let banner = reactive([])
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/scss/navigation';
@@ -28,8 +28,11 @@ const getban = async function () {
     banner.value = result.banners
   }
 }
+let route = useRoute()
+let router = useRouter()
 const changeMenu = (item) => {
-  window.location.assign(item.url);
+  // window.location.assign(item.url);
+  router.push({ name: 'song', query: { id: item.id } })
 }
 
 onMounted(() => {

@@ -10,7 +10,8 @@
             <ul class="nav">
                 <li v-for="item in menu" :key="item.path" @click="select(item.path)"
                     :class="{ 'active': route.path == item.path }">
-                    <i :class="['iconfont', `${item.icon}`,{'iconfontColor':item.path==route.path}]"></i><span>{{ item.name }}</span>
+                    <i :class="['iconfont', `${item.icon}`, { 'iconfontColor': item.path == route.path }]"></i><span>{{ item.name
+                    }}</span>
                 </li>
             </ul>
         </div>

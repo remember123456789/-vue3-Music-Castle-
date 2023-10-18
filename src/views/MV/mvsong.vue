@@ -1,6 +1,6 @@
 <template>
     <div>
-        我是MV
+        我是mvsong
     </div>
 </template>
 <script setup>

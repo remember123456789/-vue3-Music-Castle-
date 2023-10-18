@@ -54,3 +54,17 @@ export const getmusicContent = (id) => {
         }
     })
 }
+//获取最新mv
+// 可选值为全部,内地,港台,欧美,日本,韩国,不填则为全部
+export const getmusicMV = ({ area }) => {
+    return service({
+        url: "/mv/first",
+        method: "get",
+        params: {
+            area
+        }
+    })
+}
+
+
+
