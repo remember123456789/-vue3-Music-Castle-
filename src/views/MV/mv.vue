@@ -1,4 +1,5 @@
 <template>
+    <span v-if="mv_info['code'] !== 0" style="font-size: 50px; font-weight: 9000;">无数据 code=400</span>
     <div class="container-mv">
         <div class="mv-left">
             <router-link class="swperr-bottom" :to="{ name: 'mvsong', query: { id: item.id } }"
@@ -8,7 +9,7 @@
                     <div class="el-top-img">
                         <!-- <img src="" alt="" style="width: 60px; height: 60px;"> -->
                     </div>
-                    
+
                 </div>
 
                 <div class="el-name" style="color: black;">{{ item.name }}</div>
@@ -64,12 +65,21 @@ let mv_info = reactive({
         type: "",
         order: ''
     },
-    mv_List: []
+    mv_List: [],
+    code: 0
 })
 
 // 获取mv列表
 const getMVLIsts = async (params) => {
     let result = await proxy.$http.getMVinfo(params)
+    if (result.code !== 200) {
+        proxy.$mes.error("暂时没有数据");
+        mv_info['code'] = result.code
+    } else {
+        mv_info['code'] = 0
+    }
+
+
     mv_info['mv_List'] = result.data
 }
 

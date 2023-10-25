@@ -122,6 +122,11 @@ export const getMVinfo = ({ area, type, order }) => {
     })
 }
 
+
+
+
+// ----------------------------------MV---------------------
+
 // 获取MV播放地址
 export const getMVVideo = ({ id }) => {
     return service({
@@ -129,6 +134,39 @@ export const getMVVideo = ({ id }) => {
         method: 'get',
         params: {
             id
+        }
+    })
+}
+
+//获取mv数据
+export const getDataMv = (mvid) => {
+    return service({
+        url: '/mv/detail',
+        method: 'get',
+        params: {
+            mvid
+        }
+    })
+}
+
+// 获取Mv评论
+export const getComment = (id) => {
+    return service({
+        url: "/comment/mv",
+        method: 'get',
+        params: {
+            id
+        }
+    })
+}
+
+// 相似MV
+export const smaileMV = (mvid) => {
+    return service({
+        url: '/simi/mv',
+        method: 'get',
+        params: {
+            mvid
         }
     })
 }
