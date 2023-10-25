@@ -66,5 +66,45 @@ export const getmusicMV = ({ area }) => {
     })
 }
 
+// 热门电台
+export const gethotDj = ({ limit }) => {
+    return service({
+        url: '/dj/hot',
+        method: 'get',
+        params: {
+            limit
+        }
+    })
+}
 
+// 获取热门歌手
+export const hostSonger = () => {
+    return service({
+        url: 'top/artists',
+        method: "get"
+    })
+}
 
+// 获取所有榜单详情
+export const getAllRankList = () => {
+    return service({
+        url: '/toplist/detail',
+        method: "get"
+    })
+}
+
+// 获取歌单详情传递一个id值
+export const getMenuId = ({ id }) => {
+    return service({
+        url: `/playlist/detail?id=${id}`,
+        method: 'get',
+    })
+}
+
+// 获取歌单内全部歌曲
+export const getMenuSongList = ({ id }) => {
+    return service({
+        url: `/playlist/track/all?id=${id}&limit=20`,
+        method: 'get',
+    })
+}

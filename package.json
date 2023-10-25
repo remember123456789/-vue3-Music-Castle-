@@ -9,6 +9,7 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
     "axios": "^1.5.1",
     "element-plus": "^2.3.14",
     "sass": "^1.68.0",

@@ -7,33 +7,38 @@ const router = createRouter({
       path: '/',
       component: () => import('@/views/Home/Home.vue'),
     },
+    //排行榜
     {
       path: '/rank',
       name: 'Rank',
       component: () => import('@/views/Rank/rank.vue')
     },
+    //歌单列表
     {
       path: '/playlist',
       name: 'playlist',
       component: () => import('@/views/playlist/playlist.vue')
     },
+    //mv列表
     {
       path: '/mv',
       name: 'mv',
       component: () => import('@/views/MV/mv.vue')
     },
+    //播放mv
     {
       path: '/mv/mvsong',
       name: 'mvsong',
       component: () => import('@/views/MV/mvsong.vue')
     },
 
-
+    //歌手
     {
       path: '/singer',
       name: 'singer',
       component: () => import('@/views/Singer/singer.vue')
     },
+    // 歌曲详情
     {
       path: '/song',
       name: 'song',
