@@ -8,7 +8,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import '/public/iconfont.css'
 import UTILS from './utlis/index.js'
-import { ElButton, ElContainer, ElInput,ElCard,ElImage,ElSkeleton ,ElMessage,ElTable  } from 'element-plus'
+import { ElButton, ElContainer, ElInput, ElCard, ElImage, ElSkeleton, ElMessage, ElTable, ElAffix } from 'element-plus'
 //引入element UI图表
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
@@ -18,11 +18,11 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 
 
-app.config.globalProperties['$http']=getApi
-app.config.globalProperties['$mes']=ElMessage
-app.config.globalProperties['$common']=COMMON
+app.config.globalProperties['$http'] = getApi
+app.config.globalProperties['$mes'] = ElMessage
+app.config.globalProperties['$common'] = COMMON
 //工具
-app.config.globalProperties['$utlis']=UTILS
+app.config.globalProperties['$utlis'] = UTILS
 app.use(ElementPlus)
 
 app.use(router)

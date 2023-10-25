@@ -8,8 +8,16 @@ let EV_MV = [
     { name: '日本' },
     { name: '韩国' },
 ]
-
+// 全部官方版原生现场版网易出品
+let EV_MV_LIST = [
+    { name: '全部' },
+    { name: '官方版' },
+    { name: '原生' },
+    { name: '现场版' },
+    { name: '网易出品' },
+]
 export default {
     EV_ALBUM,
-    EV_MV
+    EV_MV,
+    EV_MV_LIST
 }

@@ -108,3 +108,27 @@ export const getMenuSongList = ({ id }) => {
         method: 'get',
     })
 }
+
+// 获取MV信息
+export const getMVinfo = ({ area, type, order }) => {
+    return service({
+        url: "/mv/all",
+        method: 'get',
+        params: {
+            area,
+            type,
+            order
+        }
+    })
+}
+
+// 获取MV播放地址
+export const getMVVideo = ({ id }) => {
+    return service({
+        url: '/mv/url',
+        method: 'get',
+        params: {
+            id
+        }
+    })
+}
