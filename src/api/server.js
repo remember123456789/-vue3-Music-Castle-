@@ -128,7 +128,7 @@ export const getMVinfo = ({ area, type, order }) => {
 // ----------------------------------MV---------------------
 
 // 获取MV播放地址
-export const getMVVideo = ({ id }) => {
+export const getMVVideo = (id) => {
     return service({
         url: '/mv/url',
         method: 'get',
