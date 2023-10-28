@@ -4,7 +4,7 @@
             <div class="mv-vedio">
                 <div class="mv-info">
 
-                        <p style="font-size: 20px;color: #2D2D2D;">{{mv_info['mv_data'].name }}</p>
+                    <p style="font-size: 20px;color: #2D2D2D;">{{ mv_info['mv_data'].name }}</p>
                     <span style="font-size: 14px;color: #666666;">{{ mv_info['mv_data'].artistName
                     }}</span>
                 </div>
@@ -83,7 +83,7 @@ let mv_info = reactive({
         width: '100%', //播放器高度
         height: '100%', //播放器高度
         color: "#409eff", //主题色
-        currentTime: 0,
+        // currentTime: 0,
         speed: true, //关闭进度条拖动
         title: '', //视频名称
         src: "", //视频源
@@ -221,8 +221,10 @@ watchEffect(() => {
                         width: 40px;
                         height: 40px;
                         position: absolute;
+                        border-radius: 50%;
 
                         img {
+                            border-radius: 50%;
                             width: 40px;
                             height: 40px;
                         }
