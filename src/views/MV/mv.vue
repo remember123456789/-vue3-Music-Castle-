@@ -49,11 +49,27 @@
         </div>
     </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, getCurrentInstance, onMounted, watch, watchEffect } from 'vue';
 
-const { proxy } = getCurrentInstance()
-let mv_info = reactive({
+const { proxy }: any = getCurrentInstance()
+/** MV_INFO */
+interface MV_INFO {
+    info_order: [string, string],
+    info_area: Array<{ name: string }>,
+    info_type: Array<{ name: string }>,
+    order_index: number,
+    area_index: number,
+    type_index: number,
+    params: {
+        area: string,
+        type: string,
+        order: string
+    },
+    mv_List: any,
+    code: number
+}
+let mv_info: MV_INFO = reactive({
     info_order: ['上升最快', '最新'],
     info_area: proxy.$common.EV_MV,
     info_type: proxy.$common.EV_MV_LIST,
@@ -69,8 +85,10 @@ let mv_info = reactive({
     code: 0
 })
 
+
+
 // 获取mv列表
-const getMVLIsts = async (params) => {
+const getMVLIsts = async (params: MV_INFO) => {
     let result = await proxy.$http.getMVinfo(params)
     if (result.code !== 200) {
         proxy.$mes.error("暂时没有数据");
@@ -86,22 +104,22 @@ const getMVLIsts = async (params) => {
 
 
 // 排序切换按钮
-const selectOrder = (order, index) => {
+const selectOrder = (order: MV_INFO['params']['order'], index: number) => {
     mv_info['order_index'] = index
     mv_info['params']['order'] = order
 
 }
-const selectArea = (area, index) => {
+const selectArea = (area: MV_INFO['params']['area'], index: number) => {
     mv_info['area_index'] = index
     mv_info['params']['area'] = area
 
 }
-const selectType = (types, index) => {
+const selectType = (types: MV_INFO['params']['type'], index: number) => {
     mv_info['type_index'] = index
     mv_info['params']['type'] = types
 
 }
-
+// 高级侦听器  页面加载自动调用一次 可以侦听到多个值的变化
 watchEffect(() => {
     if (mv_info['params']) {
         getMVLIsts(mv_info['params'])
@@ -109,9 +127,7 @@ watchEffect(() => {
 })
 
 
-// onMounted(() => {
-//     getMVLIsts(mv_info['params'])
-// })
+
 </script>
 <style scoped lang="scss">
 .container-mv {

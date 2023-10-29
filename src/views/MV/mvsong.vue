@@ -88,7 +88,8 @@ let mv_info = reactive({
         title: '', //视频名称
         src: "", //视频源
         poster: 'http://p1.music.126.net/jdg571bfqGpPszOpzl8Puw==/109951164913023487.jpg',
-        autoPlay: false
+        // autoPlay: true
+        preload: 'auto'
     }
 })
 // 获取mv数据
@@ -192,16 +193,18 @@ watchEffect(() => {
                 }
 
                 textarea {
+                    resize: none;
                     width: calc(100% - 30px);
                     padding: 10px 15px;
                     line-height: 24px;
-                    min-height: 90px;
+                    min-height: 50px;
                     font-size: 14px;
                     color: #333;
                     border-radius: 4px;
                     white-space: pre-wrap;
                     word-wrap: break-word;
                     margin: 20px 0;
+                    border: 1px solid #ccc;
                 }
             }
 
