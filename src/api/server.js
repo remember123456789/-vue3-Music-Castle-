@@ -170,3 +170,12 @@ export const smaileMV = (mvid) => {
         }
     })
 }
+
+
+// 获取歌手
+export const getSonger = () => {
+    return service({
+        url: '/artist/list',
+        method: 'get'
+    })
+}

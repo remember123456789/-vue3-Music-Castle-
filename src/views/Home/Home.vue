@@ -1,9 +1,10 @@
 <template>
     <div>
         <Banner></Banner>
+         <Top></Top>
         <recommed></recommed>
         <Album></Album>
-        <Top></Top>
+       
         <HomeMV></HomeMV>
         <footer style="display: flex;">
             <HotDj></HotDj>

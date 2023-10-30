@@ -1,15 +1,5 @@
 <template>
-    <div class="playList">
-       <el-card class="box-card">
-        <div class="box-splide" v-for="item in 5">
-                <div class="splide-title">123</div>
-                <div class="splide-Classification">
-                    <span>123</span>
-                </div>
-            </div>
-
-       </el-card>
-    </div>
+    暂无数据
 </template>
 <script setup>
 import { ref, reactive } from 'vue';

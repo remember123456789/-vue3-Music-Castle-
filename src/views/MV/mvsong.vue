@@ -69,12 +69,29 @@
 
     </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, getCurrentInstance, onMounted, watch, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-const { proxy } = getCurrentInstance()
+const { proxy }: any = getCurrentInstance()
 let route = useRoute()
-let mv_info = reactive({
+interface MVINFO {
+    mv_data: any,
+    mvs: any,
+    comments: any,
+    total: number,
+    options: {
+        width: string,
+        height: string,
+        color: string,
+        speed: boolean,
+        title: string,
+        src: string,
+        poster: string,
+        preload: string
+    }
+
+}
+let mv_info: MVINFO = reactive({
     mv_data: {},
     mvs: [],
     comments: [],
@@ -92,6 +109,9 @@ let mv_info = reactive({
         preload: 'auto'
     }
 })
+
+
+
 // 获取mv数据
 const getMvinfo = async () => {
     let result = await proxy.$http.getDataMv(route.query.id)
@@ -177,7 +197,7 @@ watchEffect(() => {
                 background-color: black;
             }
         }
-
+//   评论
         .mv-comment {
             width: 100%;
             height: auto;

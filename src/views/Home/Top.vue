@@ -2,7 +2,7 @@
     <div class="card-big">
         <el-card class="box-card" v-for="item in TopInfo.TopList">
             <div class="top-hd">
-                <router-link :to="{ name: 'Rank', query: { id: 1 } }" :class="['top-hd-title']">
+                <router-link :to="{ name: 'Rank', query: { id: 1} }" :class="['top-hd-title']" >
                     {{ item.name }}
                 </router-link>
                 <span style="    line-height: 18px;font-weight: 300;color: var(--color-text);">
@@ -31,6 +31,7 @@
 import { ref, reactive, getCurrentInstance, onMounted } from 'vue';
 const { proxy }: any = getCurrentInstance()
 
+let idname=ref()
 interface TOPINFO {
     TopList: Array<any>,
     PlayListDetail: any
@@ -67,6 +68,7 @@ const checkTime = (timestamp: number) => {
     const seconds = ('0' + date.getSeconds()).slice(-2);
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
+
 
 
 
