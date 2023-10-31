@@ -45,7 +45,14 @@ const router = createRouter({
       component: () => import('@/views/song/song.vue')
     }
 
-  ]
+  ],
+  // 路由发生变化时回到页面顶部
+  scrollBehavior(to, form, savedPosition) {
+    return { top: 0 }
+  }
 })
+
+
+
 
 export default router

@@ -1,0 +1,23 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "14559728",
+      "name": "播放备份 13",
+      "font_class": "bofangbeifen13",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "14559732",
+      "name": "播放备份 14",
+      "font_class": "bofangbeifen14",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    }
+  ]
+}

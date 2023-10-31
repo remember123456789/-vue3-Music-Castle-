@@ -14,14 +14,14 @@
       </el-container>
     </el-container>
   </div>
+  <Bar></Bar>
 </template>
 <script setup>
 import { ref, reactive } from 'vue';
 import Header from './components/Header.vue'
 import Aside from './components/Aside.vue'
+import Bar from './views/tabBar/Bar.vue'
 
 
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -179,3 +179,56 @@ export const getSonger = () => {
         method: 'get'
     })
 }
+
+//获取歌曲详情
+export const getSongerInfo = (ids) => {
+    return service({
+        url: `/song/detail?ids=${ids}`,
+        method: 'get',
+    })
+}
+
+// 相似歌曲
+export const smialMusic = (id) => {
+    return service({
+        url: '/simi/song',
+        method: 'get',
+        params: {
+            id
+        }
+    })
+}
+
+// 获取歌词
+export const geciSmail = (id) => {
+    return service({
+        url: "/lyric",
+        method: 'get',
+        params: {
+            id
+        }
+    })
+}
+
+
+// 获取歌曲评论
+export const getCommentMusic = (id) => {
+    return service({
+        url: "/comment/music",
+        method: 'get',
+        params: {
+            id
+        }
+    })
+}
+
+// 获取歌曲url
+export const getMusciUrl = (id) => {
+    return service({
+        url: "/song/url",
+        method: "get",
+        params: {
+            id
+        }
+    })
+}

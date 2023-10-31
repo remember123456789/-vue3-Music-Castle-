@@ -1,18 +1,23 @@
 <template>
     <div class="container">
         <div class="left">
-            <el-card class="box-left">
-                <h1 style="font-size: 30px; color: #2D2D2D;">大眠</h1>
-                <span style="font-size: 18px;color: #909090;line-height: 18px;margin: 20px 0;display: block;">小了个</span>
-                <span style="color: #909090;">专辑：<em style="color: #2D2D2D;">1232</em></span>
+            <el-card class="box-left" style="position: relative;">
+                <h1 style="font-size: 30px; color: #2D2D2D;">{{ songList['songs'].name }}</h1>
+                <span style="font-size: 18px;color: #909090;line-height: 18px;margin: 20px 0;display: block;">{{
+                    songList['songs_ar'] }}</span>
+                <span style="color: #909090;">专辑 <em style="color: #2D2D2D;">{{ songList['songs_albue'] }}</em></span>
+
+                <el-button type="warning" style="border-radius: 10px;position: absolute; top: 350px;right: 280px;">立即播放</el-button>
             </el-card>
+            <!-- 相似歌曲 -->
             <el-card class="box-simail">
                 <h1 style="width: 100px;height: 5px;border-left: 5px solid orangered;padding: 10px;line-height:5px;">相似歌曲
                 </h1>
-
                 <div class="smaill-Music">
-                    <span class="item-music" v-for="item in 4">
-                        <p style="color: #2D2D2D;font-size: 14px;">还是会想念</p>
+                    <span class="item-music" v-for="item in songList['smail_songs']">
+                        <p style="color: orangered;font-size: 14px;cursor: pointer;" @click="changeSmail(item)">{{ item.name
+                        }}</p>
+                        <span>{{ item.album.artists[0].name }}</span>
                     </span>
                 </div>
             </el-card>
@@ -20,22 +25,24 @@
         <div class="center">
             <el-card class="box-center">
                 <h1 style="text-align: center;">歌词</h1>
-                <div class="center-ci"></div>
+                <div class="center-ci" style="overflow: auto;">
+
+                    <p v-for="item in songList['txt']" v-if="songList['txt'].length != 0">{{ item }}</p>
+                    <p v-else>纯音乐，无歌词</p>
+                </div>
             </el-card>
         </div>
         <div class="right">
             <el-card class="box-right">
                 <div class="box-cover">
                     <div class="box-image">
-                        <img src="" alt="">
-                        <!-- <img src="../../assets/login.jpg" alt=""> -->
+                        <img :src="songList['pic_Url']" alt="">
                     </div>
                 </div>
             </el-card>
             <el-card class="box-gedan">
                 <h1 style="width: 150px; height: 5px;padding: 10px; border-left: 5px solid orangered; line-height: 5px;">
                     包含这首歌的歌单</h1>
-
 
                 <!-- 评论区 -->
 
@@ -57,15 +64,15 @@
 
         <!-- v-for遍历 -->
         <div class="comment-user">
-            <el-card class="box-commet">
+            <el-card class="box-commet" v-for="(item, index) in songList['hotcomments']" :key="index">
                 <div class="box-image">
                     <!-- <img :src="com.user.avatarUrl" alt=""> -->
-                    <img src="" alt="">
+                    <img :src="item.user.avatarUrl" alt="">
                 </div>
                 <div class="box-info">
-                    <h2>123</h2>
-                    <span>21111</span>
-                    <p style="color: #999999;font-size: 14px;margin-top: 10px;">4564</p>
+                    <h2>{{ item.user.nickname }}</h2>
+                    <span>{{ item.content }}</span>
+                    <p style="color: #999999;font-size: 14px;margin-top: 10px;">{{ item.time }}</p>
                 </div>
             </el-card>
         </div>
@@ -74,8 +81,80 @@
 </template>
 
 
-<script setup>
-import { ref, reactive } from 'vue';
+<script setup >
+import { ref, reactive, getCurrentInstance, onMounted, watchEffect } from 'vue';
+const { proxy } = getCurrentInstance()
+import LyricParser from "lyric-parser";
+
+import { useRoute, useRouter } from 'vue-router'
+const route = useRoute()
+const router = useRouter()
+
+let songList = reactive({
+    songs: [],
+    songs_ar: '',
+    songs_albue: '',
+    smail_songs: [],
+    pic_Url: '',
+    lyric: '',
+    lyr: false,
+    hotcomments: [],
+    txt: []
+})
+
+const getUserInfo = async () => {
+    // 获取歌曲详情
+    let result = await proxy.$http.getSongerInfo(route.query.id)
+    if (result.code !== 200) return proxy.$mes.error('获取数据失败')
+    songList['songs'] = result.songs[0]
+    songList['songs_ar'] = result.songs[0].ar[0].name
+    songList['songs_albue'] = result.songs[0].al.name
+    songList['pic_Url'] = result.songs[0].al.picUrl
+    //获取相似专辑
+    let res = await proxy.$http.smialMusic(route.query.id)
+    songList['smail_songs'] = res.songs
+    // 获取歌词
+    let success = await proxy.$http.geciSmail(route.query.id)
+    setlyc(success.lrc.lyric)
+    // 获取评论
+    let content = await proxy.$http.getCommentMusic(route.query.id)
+    songList['hotcomments'] = content.comments
+    // songList['hotcomments'] = content.comments.foreach((item) => {
+    //     console.log(item);
+    // })
+    // content.comments.forEach(item => {
+    //     songList['hotcomments'].push(item)
+    // })
+    // console.log(songList['hotcomments']);
+}
+
+const setlyc = (lyric) => {
+    if (songList['txt'].length != 0) {
+        songList['txt'] = []
+    }
+    let value = new LyricParser(lyric, (obj) => {
+    })
+    value.lines.forEach((item) => {
+        songList['txt'].push(item.txt)
+    })
+
+}
+
+// 相似歌曲跳转
+const changeSmail = (item) => {
+    router.push({ name: 'song', query: { id: item.id } })
+}
+
+watchEffect(() => {
+    if (route.query.id) {
+        getUserInfo()
+    }
+})
+
+onMounted(() => {
+    getUserInfo()
+})
+
 
 </script>
 <style scoped lang="scss">
@@ -83,7 +162,7 @@ import { ref, reactive } from 'vue';
     overflow: hidden;
     margin-top: 20px;
     width: 100%;
-    height: 100vh;
+    height: 120vh;
     // background-color: antiquewhite;
     display: flex;
 
@@ -101,7 +180,8 @@ import { ref, reactive } from 'vue';
         .box-simail {
             margin-top: 20px;
             width: 100%;
-            height: 100%;
+            height: 95%;
+            overflow: hidden;
 
             .smaill-Music {
                 margin-top: 20px;
@@ -125,7 +205,7 @@ import { ref, reactive } from 'vue';
     .center {
         width: 30%;
         margin: 0 50px;
-        height: 100vh;
+        height: 116vh;
 
         .box-center {
             width: 100%;
@@ -134,9 +214,13 @@ import { ref, reactive } from 'vue';
 
             .center-ci {
                 margin-top: 20px;
-                height: 700px;
+                height: 800px;
                 width: 100%;
+
                 // background-color: black;
+                p {
+                    text-align: center;
+                }
             }
         }
     }
@@ -180,7 +264,7 @@ import { ref, reactive } from 'vue';
         .box-gedan {
             margin-top: 20px;
             width: 100%;
-            height: 100%;
+            height: 90%;
             //   评论
 
         }
@@ -225,7 +309,10 @@ import { ref, reactive } from 'vue';
         margin-top: 30px;
         display: flex;
 
+        flex-wrap: wrap;
+
         .box-commet {
+            margin: 10px 0;
             width: 100%;
             height: auto;
             border-radius: 10px;
@@ -266,3 +353,5 @@ import { ref, reactive } from 'vue';
     }
 }
 </style>
+
+
