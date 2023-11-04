@@ -36,18 +36,18 @@ let prox = defineProps({
         default: 19723756
     }
 })
-console.log(prox.id);
+
 
 interface SongLIst {
     song: Array<any>,
     tableData: Array<{ id: number, date: string, songer: string, name: string, time: number, menuicId: number,songerid:number }>,
-    isLoading: boolean
+  
 }
 
 let songList: SongLIst = reactive({
     song: [],
     tableData: [],
-    isLoading: true
+
 })
 
 const getSongList = async (): Promise<void> => {

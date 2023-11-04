@@ -6,8 +6,6 @@
                 <span style="font-size: 18px;color: #909090;line-height: 18px;margin: 20px 0;display: block;">{{
                     songList['songs_ar'] }}</span>
                 <span style="color: #909090;">专辑 <em style="color: #2D2D2D;">{{ songList['songs_albue'] }}</em></span>
-
-                <el-button type="warning" style="border-radius: 10px;position: absolute; top: 350px;right: 280px;">立即播放</el-button>
             </el-card>
             <!-- 相似歌曲 -->
             <el-card class="box-simail">
@@ -90,6 +88,13 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
+// 引入pinia
+import { useCounterStore } from '../../store/index'
+
+let store = useCounterStore()
+
+
+
 let songList = reactive({
     songs: [],
     songs_ar: '',
@@ -103,6 +108,10 @@ let songList = reactive({
 })
 
 const getUserInfo = async () => {
+    // 将当前页面id存入pinia中
+    store.id = route.query.id
+
+
     // 获取歌曲详情
     let result = await proxy.$http.getSongerInfo(route.query.id)
     if (result.code !== 200) return proxy.$mes.error('获取数据失败')
@@ -110,6 +119,11 @@ const getUserInfo = async () => {
     songList['songs_ar'] = result.songs[0].ar[0].name
     songList['songs_albue'] = result.songs[0].al.name
     songList['pic_Url'] = result.songs[0].al.picUrl
+
+    store.pic = result.songs[0].al.picUrl;
+    store.name = result.songs[0].ar[0].name
+    store.nameMusic = result.songs[0].name
+
     //获取相似专辑
     let res = await proxy.$http.smialMusic(route.query.id)
     songList['smail_songs'] = res.songs
@@ -143,6 +157,11 @@ const setlyc = (lyric) => {
 // 相似歌曲跳转
 const changeSmail = (item) => {
     router.push({ name: 'song', query: { id: item.id } })
+}
+
+// 立即播放
+const playMusci = () => {
+    store.flags = !store.flags
 }
 
 watchEffect(() => {

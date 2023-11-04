@@ -10,6 +10,7 @@ declare module 'vue' {
     Aside: typeof import('./src/components/Aside.vue')['default']
     ElAffix: typeof import('element-plus/es')['ElAffix']
     ElAside: typeof import('element-plus/es')['ElAside']
+    ElBu: typeof import('element-plus/es')['ElBu']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCol: typeof import('element-plus/es')['ElCol']

@@ -8,6 +8,10 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import '/public/iconfont.css'
 import UTILS from './utlis/index.js'
+import { createPinia } from 'pinia'
+const pinia = createPinia()
+app.use(pinia)
+
 import { ElButton, ElContainer, ElInput, ElCard, ElImage, ElSkeleton, ElMessage, ElTable, ElAffix, ElRow, ElCol } from 'element-plus'
 //引入element UI图表
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'

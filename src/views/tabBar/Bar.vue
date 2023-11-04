@@ -1,54 +1,81 @@
 <template>
     <div class="bottom-bar">
-        <div class="bar-img">
-            <img src="" alt="">
+        <div class="bar-img" @click="currentImg">
+            <img :src="audio_info['urlPic']" alt="">
         </div>
         <div class="bar-info">
-            <span>123</span>
-            <p style="margin-top: 20px;">12321</p>
+            <span>{{ audio_info['musicName'] }}</span>
+            <p style="margin-top: 20px;">{{ audio_info['name'] }}</p>
         </div>
         <div class="play">
-            <i class="iconfont icon-bofangbeifen13" @click="getUrl"></i>
         </div>
         <div class="audio">
-            <button @click="changeplay">点击</button>
-            <audio
-                src="http://m801.music.126.net/20231031211341/e548ed0d71c220d36e4260202a9a7527/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/17718433824/acca/41eb/8112/efa4dce840121844afcb957bcb2d4fd1.mp3"
-                autoplay controls ref="audio">11</audio>
+            <el-button type="success" @click="changeplay"> <el-icon>
+                    <Service />
+                </el-icon>立即播放/暂停</el-button>
+            <audio :src="audio_info['url']" ref="audio" class="audio-sty">11</audio>
         </div>
-
     </div>
 </template>
 <script setup>
-import { ref, reactive, getCurrentInstance, } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, reactive, getCurrentInstance, watchEffect, onMounted, } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const { proxy } = getCurrentInstance()
+
+import { useCounterStore } from '../../store/index'
+// 引入pinia
+const store = useCounterStore()
 const route = useRoute()
-const audio = ref(null)
-
+const router = useRouter()
+let audio = ref()
 let audio_info = reactive({
-
+    url: '',
+    urlPic: '',
+    name: '',
+    musicName: '',
+    id: null
 })
 
 const getMUsic = async () => {
-    let result = await proxy.$http.getMusciUrl(route.query.id)
-    // console.log(result);
+    proxy.$mes.error('正在加载中');
+    let result = await proxy.$http.getMusciUrl(route.query.id || audio_info['id'])
+    audio_info['url'] = result.data[0].url
+}
+// 点击播放
+const changeplay = () => {
+    let audio = document.querySelector('.audio-sty')
+    store.flags = !store.flags
+    if (store.flags == false) {
+        audio.pause();
+        audio.currentTime = s;
+    } else {
+        getMUsic().then(() => {
+            proxy.$mes.success('加载成功')
+            audio.play()
+            // 音乐暂停
+            let s = 0;
+            setTimeout(() => {
+                s++
+            }, 1000)
+            audio_info['urlPic'] = store.pic
+            audio_info['name'] = store.name
+            audio_info['musicName'] = store.nameMusic
+            audio_info['id'] = store.id
+        })
+    }
+
 }
 
-const changeplay = () => {  
-    audio.play()
+// 跳转当前歌曲详情
+const currentImg = () => {
+    if (!store.id) {
+        proxy.$mes.warning('请选择歌曲')
+    } else {
+        router.push({ name: 'song', query: { id: store.id } })
+    }
+
 }
-
-const getUrl = () => {
-    getMUsic()
-}
-
-
-
-
-
-
 
 
 
@@ -80,6 +107,7 @@ const getUrl = () => {
         margin: 10px 20px 10px 50px;
         width: 50px;
         height: 50px;
+        cursor: pointer;
 
         img {
             width: 100%;
@@ -102,6 +130,17 @@ const getUrl = () => {
             width: 100%;
             height: 100%;
         }
+    }
+
+    .audio {
+        line-height: 70px;
+        // text-align: center;
+        margin-left: 200px;
+    }
+
+    .audio-sty {
+        margin-top: 10px;
+        margin-left: 200px;
     }
 }
 </style>

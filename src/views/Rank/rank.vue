@@ -44,7 +44,7 @@
             </div>
         </div>
         <!-- 底部区域 -->
-        <SongList :id="info['uid']" ></SongList>
+        <SongList :id="info['uid']"></SongList>
     </div>
 </template>
 <script setup>
@@ -84,7 +84,7 @@ const getLIstRANK = async () => {
         // 如果info.type为真  info['list']=info['list'+info.type]
         info['list'] = info.type ? info['list' + info.type] : info.listTop
         // 默认为空选择飙升榜
-        info['uid'] = info['uid'] ? info.uid : info.listTop[0].id 
+        info['uid'] = info['uid'] ? info.uid : info.listTop[0].id
         getMenu()
     } catch (error) {
 
@@ -96,13 +96,16 @@ const selectMenu = (type) => {
     info['type'] = type
     getLIstRANK()
 }
+
 // 选择榜单按钮
 const slectID = (item) => {
     info['uid'] = item.id
     router.push({ path: 'rank', query: { id: item.id } })
     getMenu()
-
 }
+
+
+
 // 获取歌单详情 需要传递一个id
 const getMenu = async () => {
     let result = await proxy.$http.getMenuId({ id: info['uid'] })
