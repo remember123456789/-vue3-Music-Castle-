@@ -1,15 +1,4 @@
 <<<<<<< HEAD
-# wangyi
-
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
 
 ## Project Setup
 
@@ -23,26 +12,18 @@ npm install
 npm run dev
 ```
 
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-=======
 # 网易云音乐
 
-#### 介绍
+### 介绍
 根据网易云音乐官方提供node.js的接口文档来完成网易云音乐网页版。
+技术栈 ： Vue3 + TypeScript + Element Plus + pinia + axios 
 
-#### 软件架构
-软件架构说明
+##  演示地址：  http://43.138.71.33/
 
+## 项目页面：
+### 1.首页
+
+![输入图片说明](image.png)
 
 #### 安装教程
 
