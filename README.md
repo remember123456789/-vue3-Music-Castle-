@@ -25,24 +25,13 @@ npm run dev
 
 ![输入图片说明](image.png)
 
-#### 安装教程
+### 2.歌曲
+![输入图片说明](image.png)
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+共7个页面，包括首页、rank排行榜、歌单、歌手、Mv、Mv详情页面、歌曲详情页面。
 
-#### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
 
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
 
 
 #### 特技
