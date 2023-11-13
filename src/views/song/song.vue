@@ -93,8 +93,6 @@ import { useCounterStore } from '../../store/index'
 
 let store = useCounterStore()
 
-
-
 let songList = reactive({
     songs: [],
     songs_ar: '',
@@ -130,6 +128,7 @@ const getUserInfo = async () => {
     // 获取歌词
     let success = await proxy.$http.geciSmail(route.query.id)
     setlyc(success.lrc.lyric)
+
     // 获取评论
     let content = await proxy.$http.getCommentMusic(route.query.id)
     songList['hotcomments'] = content.comments
@@ -142,12 +141,17 @@ const getUserInfo = async () => {
     // console.log(songList['hotcomments']);
 }
 
+// 处理歌词
 const setlyc = (lyric) => {
     if (songList['txt'].length != 0) {
         songList['txt'] = []
     }
-    let value = new LyricParser(lyric, (obj) => {
-    })
+    let value = new LyricParser(lyric, handle)
+
+    function handle({ lineNum, txt }) {
+        console.log(lineNum);
+    }
+
     value.lines.forEach((item) => {
         songList['txt'].push(item.txt)
     })

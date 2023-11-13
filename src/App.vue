@@ -1,9 +1,7 @@
 <template>
   <el-button type="waring" @click="change" style="position: fixed;z-index: 5;">夜间模式</el-button>
   <el-button type="error" style="margin-left: 100px;z-index: 6;position: fixed;" @click="select">沉浸听歌</el-button>
-
   <div class="common-layout" style="position: relative;">
-
     <el-container>
       <el-aside width="270px" style="height: 100vh;">
         <Aside></Aside>
@@ -18,9 +16,7 @@
       </el-container>
     </el-container>
     <div class="mark">正在沉浸式听歌中......</div>
-    
   </div>
-
   <Bar style="z-index: 2;"></Bar>
 </template>
 <script setup>

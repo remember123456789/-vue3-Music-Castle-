@@ -10,7 +10,8 @@
             <ul class="nav">
                 <li v-for="item in menu" :key="item.path" @click="select(item.path)"
                     :class="{ 'active': route.path == item.path }">
-                    <i :class="['iconfont', `${item.icon}`, { 'iconfontColor': item.path == route.path }]"></i><span>{{ item.name
+                    <i :class="['iconfont', `${item.icon}`, { 'iconfontColor': item.path == route.path }]"></i><span>{{
+                        item.name
                     }}</span>
                 </li>
             </ul>
@@ -21,11 +22,9 @@
 import { ref, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+
 const router = useRouter()
 const route = useRoute()
-
-
-
 const menu = ref([
     {
         name: "首页",
@@ -61,9 +60,6 @@ const menu = ref([
 const select = (path: any) => {
     router.push(path)
 }
-
-
-
 </script>
 <style scoped lang="scss">
 .hea-left {
