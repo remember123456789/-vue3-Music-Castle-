@@ -18,7 +18,7 @@ npm run dev
 根据网易云音乐官方提供node.js的接口文档来完成网易云音乐网页版。
 技术栈 ： Vue3 + TypeScript + Element Plus + pinia + axios 
 
-##  演示地址：  http://43.138.71.33/
+##  演示地址：  http://8.140.192.42/
 
 ## 项目页面：
 ### 1.首页
