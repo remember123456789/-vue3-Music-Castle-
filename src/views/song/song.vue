@@ -70,7 +70,7 @@
                 <div class="box-info">
                     <h2>{{ item.user.nickname }}</h2>
                     <span>{{ item.content }}</span>
-                    <p style="color: #999999;font-size: 14px;margin-top: 10px;">{{ item.time }}</p>
+                    <p style="color: #999999;font-size: 14px;margin-top: 10px;">{{ getTime(item.time)  }}</p>
                 </div>
             </el-card>
         </div>
@@ -83,13 +83,14 @@
 import { ref, reactive, getCurrentInstance, onMounted, watchEffect } from 'vue';
 const { proxy } = getCurrentInstance()
 import LyricParser from "lyric-parser";
-
+// console.log(proxy.$utlis);
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
 // 引入pinia
 import { useCounterStore } from '../../store/index'
+
 
 let store = useCounterStore()
 
@@ -105,11 +106,13 @@ let songList = reactive({
     txt: []
 })
 
+function getTime(n) {
+    return new Date(n).toLocaleString().replace(/\//g, '-')
+}
+
 const getUserInfo = async () => {
     // 将当前页面id存入pinia中
     store.id = route.query.id
-
-
     // 获取歌曲详情
     let result = await proxy.$http.getSongerInfo(route.query.id)
     if (result.code !== 200) return proxy.$mes.error('获取数据失败')

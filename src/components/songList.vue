@@ -1,5 +1,5 @@
 <template>
-    <div class="container-bottom" style="border-radius: 30px;">
+    <div class="container-bottom" style="border-radius: 30px;" v-load="store.Loading">
         <el-card class="box-card">
             <template #header>
                 <div class="card-header">
@@ -30,6 +30,9 @@ import { useRoute, useRouter } from 'vue-router';
 const { proxy }: any = getCurrentInstance()
 const route = useRoute()
 const router = useRouter()
+import { useCounterStore } from '../store/index'
+const store = useCounterStore()
+
 let prox = defineProps({
     id: {
         type: Number,
@@ -40,8 +43,8 @@ let prox = defineProps({
 
 interface SongLIst {
     song: Array<any>,
-    tableData: Array<{ id: number, date: string, songer: string, name: string, time: number, menuicId: number,songerid:number }>,
-  
+    tableData: Array<{ id: number, date: string, songer: string, name: string, time: number, menuicId: number, songerid: number }>,
+
 }
 
 let songList: SongLIst = reactive({
@@ -50,33 +53,39 @@ let songList: SongLIst = reactive({
 
 })
 
+function toHHmmss(date: any): any {
+    var minutes = parseInt((date % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = (date % (1000 * 60)) / 1000;
+    var time = (minutes < 10 ? ('0' + minutes) : minutes) + ':' + (seconds < 10 ? ('0' + seconds) : seconds);
+    return time;
+}
+
+
+
 const getSongList = async (): Promise<void> => {
     if (songList['tableData'].length !== 0) {
         songList['tableData'] = []
     }
-
+store.showLoading()
     let result = await proxy.$http.getMenuSongList({ id: prox.id })
-    console.log(result);
     
-    let promises = result.songs.map(async item => {
-        return new Promise(resolve => {
+    try {
+        result.songs.map(item => {
             songList['tableData'].push({
                 id: songList['tableData'].length + 1,
                 date: item.name,
                 songer: item.ar[0].name,
                 name: item.al.name,
-                time: item.dt,
+                time: toHHmmss(item.dt),
                 menuicId: item.id,
-                songerid:item.ar.id
+                songerid: item.ar.id
             })
             songList['isLoading'] = false
         })
+        store.hideLoading()
+    } catch (error) {
 
-    })
-    console.log(songList['tableData']);
-    await Promise.all(promises)
-    
-    
+    }
 }
 
 // 点击歌曲按钮
@@ -97,7 +106,7 @@ watchEffect(() => {
         getSongList()
 
     }
- 
+
 })
 
 // onMounted(() => {

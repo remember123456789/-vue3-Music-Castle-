@@ -6,7 +6,7 @@
                     {{ item.name }}
                 </router-link>
                 <span style="    line-height: 18px;font-weight: 300;color: var(--color-text);">
-                    最新更新：{{ item.updateTime }}
+                    最新更新：{{ getTime(item.updateTime) }}
                 </span>
             </div>
             <!-- ---------------------------------------- -->
@@ -42,6 +42,9 @@ let TopInfo: TOPINFO = reactive({
     PlayListDetail: {}
 })
 
+function getTime(n) {
+    return new Date(n).toLocaleString().replace(/\//g, '-')
+}
 const getToplist = async () => {
     let result: any = await proxy.$http.getmusicMenu()
     if (result.code !== 200) return proxy.$mes.error("请求数据失败")

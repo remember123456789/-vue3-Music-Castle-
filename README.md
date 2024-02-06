@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< H   EAD
 # wangyi
 
@@ -10,6 +11,9 @@ This template should help get you started developing with Vue 3 in Vite.
 ## Customize configuration
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
+=======
+<<<<<<< HEAD
+>>>>>>> eb7e675d2866261c684ff672bd86151224a144b5
 
 ## Project Setup
 
@@ -23,45 +27,30 @@ npm install
 npm run dev
 ```
 
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-=======
 # 网易云音乐
 
-#### 介绍
+### 介绍
 根据网易云音乐官方提供node.js的接口文档来完成网易云音乐网页版。
+技术栈 ： Vue3 + TypeScript + Element Plus + pinia + axios 
 
-#### 软件架构
-软件架构说明
+##  演示地址：  http://8.140.192.42/
+
+## 项目页面：
+### 1.首页
+
+![输入图片说明](image.png)
+
+### 2.歌曲
+![输入图片说明](image.png)
+
+共7个页面，包括首页、rank排行榜、歌单、歌手、Mv、Mv详情页面、歌曲详情页面。
 
 
-#### 安装教程
+#### 夜间模式和沉浸模式
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+支持夜间和沉浸模式
+![输入图片说明](image.png)
 
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
 
 
 #### 特技

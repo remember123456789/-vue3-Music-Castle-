@@ -35,16 +35,16 @@ let audio_info = reactive({
     name: '',
     musicName: '',
     id: null
-})
+})                          
 
 const getMUsic = async () => {
     proxy.$mes.error('正在加载中');
     let result = await proxy.$http.getMusciUrl(route.query.id || audio_info['id'])
     audio_info['url'] = result.data[0].url
 }
-// 点击播放
-const changeplay = () => {
-    let audio = document.querySelector('.audio-sty')
+// 点击播放     
+const changeplay = () => {                      
+    let audio = document.querySelector('.audio-sty')            
     store.flags = !store.flags
     if (store.flags == false) {
         audio.pause();

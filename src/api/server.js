@@ -1,5 +1,6 @@
 import service from "./api";
 
+
 //获取轮播图
 export const getbanner = () => {
     return service({
@@ -7,8 +8,9 @@ export const getbanner = () => {
         method: 'get'
     })
 }
+
 //获取歌单
-export const selectmusic = ({ limit, order, cat }) => {
+export const selectmusic = (limit, order, cat) => {
     return service({
         url: '/top/playlist',
         params: {
@@ -18,7 +20,6 @@ export const selectmusic = ({ limit, order, cat }) => {
         }
     })
 }
-
 export const selectMenu = () => {
     return service({
         url: '/playlist/hot',

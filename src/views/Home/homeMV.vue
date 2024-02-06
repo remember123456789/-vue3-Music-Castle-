@@ -1,5 +1,7 @@
 <template>
-    <el-card class="box-card">
+    
+    <el-card class="box-card" v-load="store.Loading">
+        
         <div class="text imtem">
             <span>
                 <h1 style="font-size: 28px;color: #2D2D2D;">最新MV</h1>
@@ -9,10 +11,7 @@
                     :class="{ 'title-active': index == homeMvinfo['Mv_index'] }">{{ item.name }}</li>
             </div>
         </div>
-        <div class="swperr">
-            <!-- <div class="swperr-bottom" >
-               
-            </div> -->
+        <div class="swperr"  >
             <router-link class="swperr-bottom" :to="{ name: 'mvsong', query: { id: itemmv.id } }"
                 v-for="itemmv in homeMvinfo.MvList" @mouseover="movebig">
                 <div class="el-mv" style="position: relative;">
@@ -27,12 +26,21 @@
                 <div class="el-name" style="color: black;">{{ itemmv.name }}</div>
                 <div class="el-artname">{{ itemmv.artistName }}</div>
             </router-link>
+            
         </div>
+        <!-- <Loading></Loading> -->
     </el-card>
+    <!-- <Loading></Loading> -->
+    
 </template>
 
 <script setup lang="ts">
+
 import { ref, reactive, getCurrentInstance, onMounted } from 'vue';
+// import Loading from '../../components/Loading.vue'
+import { ElLoading } from 'element-plus'
+import {useCounterStore} from '../../store/index'
+let store=useCounterStore()
 
 const { proxy }: any = getCurrentInstance()
 
@@ -40,7 +48,7 @@ interface HOMEINfo {
     MV_tabs: Array<{ name: string }>
     MvList: Array<any>,
     Mv_index: number,
-    Mv_params: any
+    Mv_params: any,
 }
 
 
@@ -48,21 +56,24 @@ let homeMvinfo: HOMEINfo = reactive({
     MV_tabs: [],
     MvList: [],
     Mv_index: 0,
-    Mv_params: {}
+    Mv_params: {},
 })
+
 
 //获取mv列表
 const getMuseicMVList = async (area: string) => {
     let result: any = await proxy.$http.getmusicMV(area)
+    store.showLoading()
     if (result.code !== 200) return proxy.$mes.error("请求数据出错")
 
     try {
+        store.hideLoading()
         homeMvinfo['MvList'] = result.data.splice(0, 10)
-
     } catch (error) {
         proxy.$mes.error(new Error(error))
     }
 }
+
 
 //获取mv分类导航
 const getMuseicMvTabbar = () => {

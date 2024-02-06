@@ -1,8 +1,9 @@
 import axios from 'axios';
 
+
 // 创建一个 Axios 实例  
 const service = axios.create({
-    baseURL: 'http://43.138.71.33:3000', // 设置请求的基础 URL  
+    baseURL: 'http://8.140.192.42:3000', // 设置请求的基础 URL  
     timeout: 5000, // 设置请求超时时间（单位：毫秒）  
 });
 
@@ -11,6 +12,7 @@ service.interceptors.request.use(
     (config) => {
         // 在发送请求之前做些什么  
         // 例如：添加请求头、身份验证等  
+
         return config;
     },
     (error) => {
@@ -23,6 +25,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     (response) => {
         // 对响应数据做些什么  
+
         return response.data;
     },
     (error) => {
@@ -32,3 +35,4 @@ service.interceptors.response.use(
 );
 
 export default service;
+

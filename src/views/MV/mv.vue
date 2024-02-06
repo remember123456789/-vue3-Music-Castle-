@@ -77,9 +77,9 @@ let mv_info: MV_INFO = reactive({
     area_index: 0,
     type_index: 0,
     params: {
-        area: '',
+        area: "",
         type: "",
-        order: ''
+        order: ""
     },
     mv_List: [],
     code: 0
@@ -96,8 +96,6 @@ const getMVLIsts = async (params: MV_INFO) => {
     } else {
         mv_info['code'] = 0
     }
-
-
     mv_info['mv_List'] = result.data
 }
 

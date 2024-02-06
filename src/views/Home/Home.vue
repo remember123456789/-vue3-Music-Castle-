@@ -1,10 +1,9 @@
 <template>
     <div>
         <Banner></Banner>
-         <Top></Top>
-        <recommed></recommed>
-        <Album></Album>
-       
+        <Top></Top>
+        <!-- <Album></Album> -->
+
         <HomeMV></HomeMV>
         <footer style="display: flex;">
             <HotDj></HotDj>
@@ -15,8 +14,7 @@
 <script setup>
 import { ref, reactive } from 'vue';
 import Banner from './banner.vue'
-import recommed from './recommend.vue'
-import Album from './album.vue'
+// import Album from './album.vue'
 import Top from './Top.vue'
 import HomeMV from './homeMV.vue'
 import HotDj from './hotdj.vue'

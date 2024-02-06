@@ -16,12 +16,23 @@
                 </li>
             </ul>
         </div>
+        <div class="Theme-change" @click="ThemeChange">
+            <img src="../assets/baitian.png" alt="" class="bai" v-if="ThemeFlag">
+            <img src="../assets/dark.png" alt="" class="dark" v-else>
+        </div>
+        <span><i>切换主题</i></span>
+
     </div>
 </template>
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, type Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-
+import { useTheme } from '../hooks/theme'
+const { ThemeChangeColor } = useTheme()
+// let ThemeFlag: Ref<boolean> = ref(true)
+let ThemeFlag: Ref<Storage | boolean | null> = ref(JSON.parse(localStorage.getItem('ThemeFlag')))
+console.log(ThemeFlag.value
+);
 
 const router = useRouter()
 const route = useRoute()
@@ -59,6 +70,26 @@ const menu = ref([
 ])
 const select = (path: any) => {
     router.push(path)
+}
+const ThemeChange = (e) => {
+    if (e.target.getAttribute('src')) {
+        if (e.target.getAttribute('class') == 'bai') {
+            ThemeChangeColor('dark')
+            localStorage.setItem('ThemeFlag', 'false')
+            ThemeFlag.value = JSON.parse(localStorage.getItem('ThemeFlag'))
+            console.log(typeof ThemeFlag.value);
+
+            // ThemeFlag.value = !ThemeFlag.value
+            localStorage.setItem('theme', 'dark')
+        } else {
+            localStorage.setItem('ThemeFlag', 'true')
+            ThemeFlag.value = JSON.parse(localStorage.getItem('ThemeFlag'))
+            ThemeChangeColor('')
+            // ThemeFlag.value = !ThemeFlag.value
+            localStorage.setItem('theme', '')
+        }
+    }
+
 }
 </script>
 <style scoped lang="scss">
@@ -115,6 +146,31 @@ const select = (path: any) => {
     }
 
 
+}
+
+.Theme-change {
+    position: relative;
+    width: 80px;
+    height: 30px;
+    margin: 50px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+
+    .bai {
+        cursor: pointer;
+        position: absolute;
+        display: block;
+        width: 30px;
+        height: 30px;
+    }
+
+    .dark {
+        position: absolute;
+        right: 0;
+        width: 30px;
+        height: 27px;
+    }
 }
 
 

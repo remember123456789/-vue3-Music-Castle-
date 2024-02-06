@@ -4,15 +4,19 @@ import router from './router'
 import * as getApi from '@/api/server.js'
 const app = createApp(App)
 import COMMON from './assets/js/common'
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import '/public/iconfont.css'
-import UTILS from './utlis/index.js'
+// import UTILS from './utlis/index.js'
+// pinia
+
 import { createPinia } from 'pinia'
 const pinia = createPinia()
 app.use(pinia)
-
-import { ElButton, ElContainer, ElInput, ElCard, ElImage, ElSkeleton, ElMessage, ElTable, ElAffix, ElRow, ElCol } from 'element-plus'
+// Element plu
+import { ElButton, ElContainer, ElHeader, ElInput, ElCard, ElImage, ElSkeleton, ElMessage, ElTable, ElAffix, ElRow, ElCol } from 'element-plus'
+import { vLoading } from 'element-plus/es/components/loading/src/directive' // 按需引入loading组件
+import 'element-plus/theme-chalk/dark/css-vars.css'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+import '/public/iconfont.css'
 //引入element UI图表
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
@@ -29,8 +33,8 @@ app.config.globalProperties['$http'] = getApi
 app.config.globalProperties['$mes'] = ElMessage
 app.config.globalProperties['$common'] = COMMON
 //工具
-app.config.globalProperties['$utlis'] = UTILS
 app.use(ElementPlus)
+app.directive('load', vLoading) // 自定义load指令
 
 app.use(router)
 
