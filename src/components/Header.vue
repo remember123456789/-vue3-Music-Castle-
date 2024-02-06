@@ -1,5 +1,5 @@
 <template>
-    <div class="search">
+    <div class="search" @click.passive="showInput">
         <div class="se-input">
             <el-input v-model="input" @change="langdu" placeholder="请输入歌名、歌词、歌手或专辑"
                 style="width: 250px;height: 40px; border-bottom: 1px solid black;" />
@@ -7,6 +7,13 @@
         <el-button text @click="dialogTableVisible = true" style="margin-top: 5px;font-size: 16px;">
             登录
         </el-button>
+        <el-card class="searchFrom" v-if="showFlag">
+            <router-link v-for="item in searchInfo" :to="{
+                'name': 'song', query: { id: item.id }
+            }" class="search-input">
+                <p>{{ item.name }}</p>
+            </router-link>
+        </el-card>
 
         <el-dialog v-model="dialogTableVisible">
             <div class="login"><img src="../assets/login.jpg" alt=""></div>
@@ -34,21 +41,38 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, type Ref, watchEffect } from 'vue';
+import { type FormInstance, type FormRules } from 'element-plus'
+import { getSearchMusic } from '../api/search/index'
 const dialogTableVisible = ref(false)
 const dialogFormVisible = ref(false)
-
 const ruleFormRef = ref<FormInstance>()
 const input = ref('')
 
+const showFlag: Ref<boolean> = ref(false)
+type MusicInfo = {
+    name: string,
+    author: string,
+    id: number
+}
+
+let searchInfo = ref([])
+const showInput = () => {
+    showFlag.value = true
+}
+
+
 //实现朗读功能
-const langdu = () => {
-    var ssa = new SpeechSynthesisUtterance(input.value)
-    window.speechSynthesis.speak(ssa)
+const langdu = async () => {
+    const SearchKeywords = await getSearchMusic(input.value)
+    if (SearchKeywords.code == 200) {
+        searchInfo.value = SearchKeywords.result.songs
+    } else {
+
+    }
 }
 
 const checkAge = (rule: any, value: any, callback: any) => {
-
     setTimeout(() => {
         if (!Number.isInteger(value)) {
             callback(new Error('Please input digits'))
@@ -114,9 +138,25 @@ const resetForm = (formEl: FormInstance | undefined) => {
 .search {
     display: flex;
     width: 300px;
-    position: absolute;
-    right: 70px;
+    position: relative;
+    left: 850px;
     top: 40px;
+
+    .searchFrom {
+        z-index: 2;
+        width: 300px;
+        height: 300px;
+        position: absolute;
+        top: 40px;
+
+        .searchInput {
+            display: flex;
+            width: 100%;
+            ;
+            height: 50px;
+
+        }
+    }
 
     .se-input {}
 

@@ -31,8 +31,6 @@ import { useTheme } from '../hooks/theme'
 const { ThemeChangeColor } = useTheme()
 // let ThemeFlag: Ref<boolean> = ref(true)
 let ThemeFlag: Ref<Storage | boolean | null> = ref(JSON.parse(localStorage.getItem('ThemeFlag')))
-console.log(ThemeFlag.value
-);
 
 const router = useRouter()
 const route = useRoute()
