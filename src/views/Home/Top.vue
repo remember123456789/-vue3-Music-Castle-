@@ -2,7 +2,7 @@
     <div class="card-big">
         <el-card class="box-card" v-for="item in TopInfo.TopList">
             <div class="top-hd">
-                <router-link :to="{ name: 'Rank', query: { id: 1} }" :class="['top-hd-title']" >
+                <router-link :to="{ name: 'Rank', query: { id: 1 } }" :class="['top-hd-title']">
                     {{ item.name }}
                 </router-link>
                 <span style="    line-height: 18px;font-weight: 300;color: var(--color-text);">
@@ -14,7 +14,7 @@
                 <div class="top-wapper-image">
                     <img :src="songItem.al.picUrl" alt="">
                 </div>
-                <div class="top-wapper-song" >
+                <div class="top-wapper-song">
                     <router-link :to="{ name: 'song', query: { id: songItem.id } }" style="text-decoration: none; ">
                         <span class="song-name" style="cursor: pointer;">{{ songItem.name }}</span>
                         <p>{{ songItem.al.name }}</p>
@@ -31,7 +31,7 @@
 import { ref, reactive, getCurrentInstance, onMounted } from 'vue';
 const { proxy }: any = getCurrentInstance()
 
-let idname=ref()
+let idname = ref()
 interface TOPINFO {
     TopList: Array<any>,
     PlayListDetail: any

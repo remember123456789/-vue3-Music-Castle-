@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { type AxiosResponse } from 'axios'
 
 // 创建一个 Axios 实例  
 const service = axios.create({
@@ -23,7 +23,7 @@ service.interceptors.request.use(
 
 // 响应拦截器  
 service.interceptors.response.use(
-    (response) => {
+    (response): AxiosResponse<any> => {
         // 对响应数据做些什么  
 
         return response.data;

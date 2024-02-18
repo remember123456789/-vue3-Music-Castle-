@@ -35,29 +35,55 @@ let audio_info = reactive({
     name: '',
     musicName: '',
     id: null
-})                          
+})
 
 const getMUsic = async () => {
     proxy.$mes.error('正在加载中');
     let result = await proxy.$http.getMusciUrl(route.query.id || audio_info['id'])
     audio_info['url'] = result.data[0].url
 }
+
+
+
 // 点击播放     
-const changeplay = () => {                      
-    let audio = document.querySelector('.audio-sty')            
+const changeplay = () => {
+    let audio = document.querySelector('.audio-sty')
     store.flags = !store.flags
     if (store.flags == false) {
         audio.pause();
-        audio.currentTime = s;
     } else {
+
+        // 找到当前这一句歌词的索引
+        function FindIndex() {
+            let currentTime = audio.currentTime
+            for (var i = 0; i < store.lyicWords.length; i++) {
+                if (currentTime < store.lyicWords[i].time) {
+                    return i - 1
+                }
+            }
+            return store.lyicWords.length - 1
+        }
+        // 计算偏移量 
+        /**
+         * 偏移量
+         * @containerHeight //容器高度
+         * @PHeight   //单个歌词高度
+         */
+        function Setoffset() {
+            var index = FindIndex()
+            var offset = index * store.PHeight + store.PHeight / 2 - store.containerHeight / 2
+            if (offset < 0) {
+                offset = 0
+            }
+            store.index = index
+            store.Offset = offset
+        }
+
+        // audio 时间变化事件
+        audio.addEventListener('timeupdate', Setoffset)
         getMUsic().then(() => {
             proxy.$mes.success('加载成功')
             audio.play()
-            // 音乐暂停
-            let s = 0;
-            setTimeout(() => {
-                s++
-            }, 1000)
             audio_info['urlPic'] = store.pic
             audio_info['name'] = store.name
             audio_info['musicName'] = store.nameMusic
@@ -66,6 +92,10 @@ const changeplay = () => {
     }
 
 }
+
+
+
+
 
 // 跳转当前歌曲详情
 const currentImg = () => {

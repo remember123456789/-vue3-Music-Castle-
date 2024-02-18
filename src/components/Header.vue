@@ -1,7 +1,7 @@
 <template>
-    <div class="search" @click.passive="showInput">
-        <div class="se-input">
-            <el-input v-model="input" @change="langdu" placeholder="请输入歌名、歌词、歌手或专辑"
+    <div class="search">
+        <div class="se-input" @blur="showFlag = false">
+            <el-input v-model="input" @focus="showFlag = true" @keyup="langdu" placeholder="请输入歌名、歌词、歌手或专辑"
                 style="width: 250px;height: 40px; border-bottom: 1px solid black;" />
         </div>
         <el-button text @click="dialogTableVisible = true" style="margin-top: 5px;font-size: 16px;">
@@ -20,109 +20,104 @@
             <!-- 表单 -->
             <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="120px"
                 class="demo-ruleForm">
-                <el-form-item label="用户名" prop="name">
-                    <el-input v-model="ruleForm.name" type="text" autocomplete="off" style="width: 536px;" />
+                <el-form-item label="手机号" prop="phone">
+                    <el-input v-model="ruleForm.phone" type="number" autocomplete="off" style="width: 536px;" />
                 </el-form-item>
-                <el-form-item label="密码" prop="pass">
-                    <el-input v-model="ruleForm.pass" type="password" autocomplete="off" style="width: 536px;" />
+                <el-form-item label="密码" prop="password">
+                    <el-input v-model="ruleForm.password" type="password" autocomplete="off" style="width: 536px;" />
                 </el-form-item>
-                <el-form-item label="再次输入密码" prop="checkPass">
-                    <el-input v-model="ruleForm.checkPass" type="password" autocomplete="off" style="width: 536px;" />
-                </el-form-item>
-
                 <el-form-item>
                     <el-button type="primary" @click="submitForm(ruleFormRef)">登录</el-button>
                     <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
-
-
     </div>
 </template>
 <script setup lang="ts">
-import { ref, reactive, type Ref, watchEffect } from 'vue';
-import { type FormInstance, type FormRules } from 'element-plus'
+import { ref, reactive, type Ref, watchEffect, watch } from 'vue';
+import { type FormInstance, type FormRules, ElMessage } from 'element-plus'
 import { getSearchMusic } from '../api/search/index'
+import { Userlogin } from '../api/login/index'
+import { useCounterStore } from '../store/index'
+import { useRoute, useRouter } from 'vue-router'
+const store = useCounterStore()
 const dialogTableVisible = ref(false)
 const dialogFormVisible = ref(false)
 const ruleFormRef = ref<FormInstance>()
 const input = ref('')
-
+const router = useRouter()
 const showFlag: Ref<boolean> = ref(false)
-type MusicInfo = {
-    name: string,
-    author: string,
-    id: number
-}
+
 
 let searchInfo = ref([])
-const showInput = () => {
-    showFlag.value = true
-}
 
+watchEffect(() => {
+    if (input.value === '') {
+        showFlag.value = false
+    }
+})
 
-//实现朗读功能
+//搜索
 const langdu = async () => {
-    const SearchKeywords = await getSearchMusic(input.value)
-    if (SearchKeywords.code == 200) {
-        searchInfo.value = SearchKeywords.result.songs
-    } else {
 
-    }
-}
-
-const checkAge = (rule: any, value: any, callback: any) => {
-    setTimeout(() => {
-        if (!Number.isInteger(value)) {
-            callback(new Error('Please input digits'))
+    try {
+        const SearchKeywords = await getSearchMusic(input.value)
+        if (SearchKeywords.code == 200) {
+            searchInfo.value = SearchKeywords.result.songs
         } else {
-            callback()
+            ElMessage({
+                showClose: true,
+                message: '操作过于频繁，请稍后再输入',
+                type: 'warning',
+            })
         }
-    }, 1000)
-}
 
-const validatePass = (rule: any, value: any, callback: any) => {
-    if (value === '') {
-        callback(new Error('Please input the password'))
-    } else {
-        if (ruleForm.checkPass !== '') {
-            if (!ruleFormRef.value) return
-            ruleFormRef.value.validateField('checkPass', () => null)
-        }
-        callback()
+    } catch (error) {
+        // ElMessage({
+        //     showClose: true,
+        //     message: 'Warning, this is a warning message.',
+        //     type: 'warning',
+        // })
     }
 }
-const validatePass2 = (rule: any, value: any, callback: any) => {
-    if (value === '') {
-        callback(new Error('Please input the password again'))
-    } else if (value !== ruleForm.pass) {
-        callback(new Error("Two inputs don't match!"))
-    } else {
-        callback()
-    }
-}
+// login
+
+
 
 const ruleForm = reactive({
-    pass: '',
-    checkPass: '',
-    name: ''
-
+    password: '',
+    phone: ''
 })
 
 const rules = reactive<FormRules<typeof ruleForm>>({
-    pass: [{ validator: validatePass, trigger: 'blur' }],
-    checkPass: [{ validator: validatePass2, trigger: 'blur' }],
-
+    phone: [{ required: true, message: '宝贝记得输入手机号哦', trigger: 'blur' }],
+    password: [{ required: true, message: '宝贝记得输入密码哦', trigger: 'blur' }],
 })
 
 const submitForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
-    formEl.validate((valid) => {
+    formEl.validate(async (valid) => {
         if (valid) {
-            console.log('submit!')
+            if (sessionStorage.getItem('token')) {
+                alert('你已经登录过了，请勿重复登录')
+            } else {
+                //登录成功处理逻辑 
+                const result = await Userlogin(ruleForm)
+                if (result.code == 200) {
+                    dialogTableVisible.value = false
+                    ruleForm.password = ''
+                    ruleForm.phone = ''
+                    sessionStorage.setItem('token', result.token)
+                    store.userinfo = result
+                    router.push('/my')
+                } else if (result.code == 400) {
+                    alert('服务器返回http状态码为400，请稍后再重新登录')
+                } else {
+                    alert('你的账号或者密码错误，请重新输入')
+                }
+            }
         } else {
-            console.log('error submit!')
             return false
         }
     })

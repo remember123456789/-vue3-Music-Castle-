@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import { getCurrentInstance } from 'vue'
+const { proxy } = getCurrentInstance
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -43,6 +44,12 @@ const router = createRouter({
       path: '/song',
       name: 'song',
       component: () => import('@/views/song/song.vue')
+    },
+    // 我的音乐
+    {
+      path: "/my",
+      name: 'my',
+      component: () => import('../views/my.vue')
     }
 
   ],
@@ -52,7 +59,18 @@ const router = createRouter({
   }
 })
 
-
+router.beforeEach((to, from, next) => {
+  if (to.path == '/my') {
+    if (sessionStorage.getItem('token')) {
+      next()
+    } else {
+      alert('请先登录')
+      next(from)
+    }
+  } else {
+    next()
+  }
+})
 
 
 export default router

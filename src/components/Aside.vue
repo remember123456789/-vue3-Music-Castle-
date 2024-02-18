@@ -10,15 +10,16 @@
             <ul class="nav">
                 <li v-for="item in menu" :key="item.path" @click="select(item.path)"
                     :class="{ 'active': route.path == item.path }">
-                    <i :class="['iconfont', `${item.icon}`, { 'iconfontColor': item.path == route.path }]"></i><span>{{
+                    <i :class="['iconfont', `${item.icon}`, { 'iconfontColor': item.path == route.path }]"></i>
+                    <p>{{
                         item.name
-                    }}</span>
+                    }}</p>
                 </li>
             </ul>
         </div>
         <div class="Theme-change" @click="ThemeChange">
             <img src="../assets/baitian.png" alt="" class="bai" v-if="ThemeFlag">
-            <img src="../assets/dark.png" alt="" class="dark" v-else>
+            <img src="../assets/qingyewan.png" alt="" class="dark" v-else>
         </div>
         <span><i>切换主题</i></span>
 
@@ -30,6 +31,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useTheme } from '../hooks/theme'
 const { ThemeChangeColor } = useTheme()
 // let ThemeFlag: Ref<boolean> = ref(true)
+// localStorage.setItem('ThemeFlag', 'true')
 let ThemeFlag: Ref<Storage | boolean | null> = ref(JSON.parse(localStorage.getItem('ThemeFlag')))
 
 const router = useRouter()
@@ -43,12 +45,8 @@ const menu = ref([
     {
         name: "排行榜",
         path: '/rank',
-        icon: 'icon-paixingbang'
-    },
-    {
-        name: "歌单",
-        path: '/playlist',
-        icon: 'icon-gedan'
+        icon: 'icon-paixingbang',
+        id: 19723756
     },
     {
         name: "MV",
@@ -67,7 +65,13 @@ const menu = ref([
     },
 ])
 const select = (path: any) => {
-    router.push(path)
+    if (path == '/rank') {
+        router.push({ name: 'Rank', query: { id: 1 } })
+    } else {
+        router.push(path)
+    }
+
+
 }
 const ThemeChange = (e) => {
     if (e.target.getAttribute('src')) {
@@ -75,8 +79,6 @@ const ThemeChange = (e) => {
             ThemeChangeColor('dark')
             localStorage.setItem('ThemeFlag', 'false')
             ThemeFlag.value = JSON.parse(localStorage.getItem('ThemeFlag'))
-            console.log(typeof ThemeFlag.value);
-
             // ThemeFlag.value = !ThemeFlag.value
             localStorage.setItem('theme', 'dark')
         } else {

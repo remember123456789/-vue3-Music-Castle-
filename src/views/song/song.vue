@@ -20,12 +20,13 @@
                 </div>
             </el-card>
         </div>
-        <div class="center">
+        <div class="center" ref="center">
+            <h1>歌词</h1>
             <el-card class="box-center">
-                <h1 style="text-align: center;">歌词</h1>
-                <div class="center-ci" style="overflow: auto;">
-
-                    <p v-for="item in songList['txt']" v-if="songList['txt'].length != 0">{{ item }}</p>
+                <div class="center-ci" style="overflow: auto;" ref="lyricHeight">
+                    <p v-for="(item, index) in  songList['txt']" v-if="songList['txt'].length != 0"
+                        :class="[index == store.index ? 'active' : '']">{{
+                            item }}</p>
                     <p v-else>纯音乐，无歌词</p>
                 </div>
             </el-card>
@@ -62,7 +63,7 @@
 
         <!-- v-for遍历 -->
         <div class="comment-user">
-            <el-card class="box-commet" v-for="(item, index) in songList['hotcomments']" :key="index">
+            <el-card class="box-commet" v-for="( item, index ) in  songList['hotcomments']" :key="index">
                 <div class="box-image">
                     <!-- <img :src="com.user.avatarUrl" alt=""> -->
                     <img :src="item.user.avatarUrl" alt="">
@@ -70,7 +71,7 @@
                 <div class="box-info">
                     <h2>{{ item.user.nickname }}</h2>
                     <span>{{ item.content }}</span>
-                    <p style="color: #999999;font-size: 14px;margin-top: 10px;">{{ getTime(item.time)  }}</p>
+                    <p style="color: #999999;font-size: 14px;margin-top: 10px;">{{ getTime(item.time) }}</p>
                 </div>
             </el-card>
         </div>
@@ -83,15 +84,17 @@
 import { ref, reactive, getCurrentInstance, onMounted, watchEffect } from 'vue';
 const { proxy } = getCurrentInstance()
 import LyricParser from "lyric-parser";
+import { HandleLyric } from '../../utlis/index'
 // console.log(proxy.$utlis);
 import { useRoute, useRouter } from 'vue-router'
+// import { useCounterStore } from '../../store/index'
 const route = useRoute()
 const router = useRouter()
-
 // 引入pinia
 import { useCounterStore } from '../../store/index'
 
-
+const center = ref()
+const lyricHeight = ref()
 let store = useCounterStore()
 
 let songList = reactive({
@@ -146,20 +149,20 @@ const getUserInfo = async () => {
 
 // 处理歌词
 const setlyc = (lyric) => {
+    const value = HandleLyric(lyric)
+    store.lyicWords = value
+    store.containerHeight = center.value.clientHeight
+    store.PHeight = lyricHeight.value.children[0].clientHeight
     if (songList['txt'].length != 0) {
         songList['txt'] = []
     }
-    let value = new LyricParser(lyric, handle)
-
-    function handle({ lineNum, txt }) {
-        console.log(lineNum);
-    }
-
-    value.lines.forEach((item) => {
-        songList['txt'].push(item.txt)
+    value.forEach((item) => {
+        songList['txt'].push(item.word)
     })
-
 }
+
+
+
 
 // 相似歌曲跳转
 const changeSmail = (item) => {
@@ -175,7 +178,12 @@ watchEffect(() => {
     if (route.query.id) {
         getUserInfo()
     }
+    if (store.Offset) {
+        // 根据偏移量滚动歌词 
+        lyricHeight.value.style.transform = `translateY(-${store.Offset}px)`
+    }
 })
+
 
 onMounted(() => {
     getUserInfo()
@@ -231,21 +239,38 @@ onMounted(() => {
     .center {
         width: 30%;
         margin: 0 50px;
-        height: 116vh;
+        height: 50vh;
+
+        h1 {
+            font-size: 2em;
+        }
 
         .box-center {
+            margin-top: 30px;
             width: 100%;
-            height: 102%;
+            height: 100%;
             border-radius: 10px;
 
+
+            /* IE10+ */
             .center-ci {
-                margin-top: 20px;
-                height: 800px;
+                // margin-top: -40px;
+                transform: translateY(-50px);
+                display: block;
+                height: 100%;
                 width: 100%;
+
 
                 // background-color: black;
                 p {
+                    transition: 0.2s;
+                    font-size: 20px;
                     text-align: center;
+                }
+
+                .active {
+                    transform: scale(1.2);
+                    color: goldenrod;
                 }
             }
         }
