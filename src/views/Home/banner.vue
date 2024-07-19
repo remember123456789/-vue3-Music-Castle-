@@ -5,10 +5,10 @@
   </swiper>
 </template>
 
-<script setup >
+<script setup>
 // Import Swiper Vue.js components
 import { Navigation, Pagination } from 'swiper/modules';
-import { ref, reactive } from 'vue'
+import { ref, reactive, onActivated } from 'vue'
 import { onMounted } from 'vue';
 import { getbanner } from '@/api/server.js'
 // Import Swiper Vue.js components
@@ -39,29 +39,18 @@ onMounted(() => {
   getban().then(() => { // 输出响应式数组的值需要在 async 函数中完成  
   });
 })
-</script>
-<style scoped  lang="scss">
-html,
-body {
-  position: relative;
-  height: 100%;
-}
+// 使用onActive生命周期函数，在组件激活时执行
 
-body {
-  background: #eee;
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  color: #000;
-  margin: 0;
-  padding: 0;
-}
+
+
+</script>
+<style scoped lang="scss">
+
 
 .swiper {
   padding: 40px 0;
   width: 100%;
   height: 100%;
-
-
 }
 
 .swiper-slide {

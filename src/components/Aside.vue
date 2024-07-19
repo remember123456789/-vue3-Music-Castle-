@@ -2,7 +2,7 @@
     <div class="hea-top" style="height: 90vh; overflow: hidden;position: fixed;">
         <div class="hea-left">
             <router-link to="/">
-                <img src="../assets/login.jpg" alt="">
+                <img src="../assets/login.webp" alt="">
             </router-link>
         </div>
 
@@ -18,10 +18,9 @@
             </ul>
         </div>
         <div class="Theme-change" @click="ThemeChange">
-            <img src="../assets/baitian.png" alt="" class="bai" v-if="ThemeFlag">
-            <img src="../assets/qingyewan.png" alt="" class="dark" v-else>
+            <img src="../assets/baitian.webp" alt="" class="bai" v-if="ThemeFlag">
+            <img src="../assets/qingyewan.webp" alt="" class="dark" v-else>
         </div>
-        <span><i>切换主题</i></span>
 
     </div>
 </template>

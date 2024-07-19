@@ -6,7 +6,7 @@ const app = createApp(App)
 import COMMON from './assets/js/common'
 // import UTILS from './utlis/index.js'
 // pinia
-
+import {createLazyloadDirective}  from './directive/loadLayz'
 import { createPinia } from 'pinia'
 const pinia = createPinia()
 app.use(pinia)
@@ -35,7 +35,7 @@ app.config.globalProperties['$common'] = COMMON
 //工具
 app.use(ElementPlus)
 app.directive('load', vLoading) // 自定义load指令
-
+app.directive('lazyload', createLazyloadDirective)
 app.use(router)
 
 app.mount('#app')

@@ -3,7 +3,7 @@ import { type AxiosResponse } from 'axios'
 
 // 创建一个 Axios 实例  
 const service = axios.create({
-    baseURL: 'http://8.140.192.42:3000', // 设置请求的基础 URL  
+    baseURL: 'http://1.94.195.239:3000', // 设置请求的基础 URL  
     timeout: 5000, // 设置请求超时时间（单位：毫秒）  
 });
 

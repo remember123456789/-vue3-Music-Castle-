@@ -16,7 +16,7 @@
         </el-card>
 
         <el-dialog v-model="dialogTableVisible">
-            <div class="login"><img src="../assets/login.jpg" alt=""></div>
+            <div class="login"><img src="../assets/login.webp" alt=""></div>
             <!-- 表单 -->
             <el-form ref="ruleFormRef" :model="ruleForm" status-icon :rules="rules" label-width="120px"
                 class="demo-ruleForm">

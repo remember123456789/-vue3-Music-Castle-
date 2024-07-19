@@ -1,7 +1,7 @@
 <template>
-    
-    <el-card class="box-card" v-load="store.Loading">
-        
+
+    <el-card class="box-card" >
+
         <div class="text imtem">
             <span>
                 <h1 style="font-size: 28px;color: #2D2D2D;">最新MV</h1>
@@ -11,37 +11,47 @@
                     :class="{ 'title-active': index == homeMvinfo['Mv_index'] }">{{ item.name }}</li>
             </div>
         </div>
-        <div class="swperr"  >
+        <div class="swperr">
             <router-link class="swperr-bottom" :to="{ name: 'mvsong', query: { id: itemmv.id } }"
-                v-for="itemmv in homeMvinfo.MvList" @mouseover="movebig">
-                <div class="el-mv" style="position: relative;">
+                v-for="itemmv in homeMvinfo.MvList" :key="itemmv.id">
+                <div v-if="Loading">
+                    <div class="el-mv" style="position: relative;" >
                     <img :src="itemmv.cover" alt="">
-
-
                     <div class="el-top-img">
-                        <img src="../../assets/24gf-playSquare.png" alt="" style="width: 60px; height: 60px;">
+                        <img src="../../assets/24gf-playSquare.webp" alt="" style="width: 60px; height: 60px;">
                     </div>
                 </div>
 
                 <div class="el-name" style="color: black;">{{ itemmv.name }}</div>
-                <div class="el-artname">{{ itemmv.artistName }}</div>
-            </router-link>
+                <div class="el-artname">{{ itemmv.artistName }}</div> 
+                </div>
             
+                <!-- 骨架屏 -->
+         
+                <el-skeleton v-else style="width: 240px"  animated>
+                    <template #template >
+                        <el-skeleton-item variant="image" style="width: 150px; height: 150px" />
+                        <el-skeleton-item variant="text" style="margin-right: 6px" />
+                        <el-skeleton-item variant="text" style="width: 20%" />
+                    </template>
+                </el-skeleton>
+            </router-link>
+
         </div>
-        <!-- <Loading></Loading> -->
+
     </el-card>
     <!-- <Loading></Loading> -->
-    
+
 </template>
 
 <script setup lang="ts">
 
-import { ref, reactive, getCurrentInstance, onMounted } from 'vue';
+import { ref, reactive, getCurrentInstance, onMounted, onActivated } from 'vue';
 // import Loading from '../../components/Loading.vue'
 import { ElLoading } from 'element-plus'
-import {useCounterStore} from '../../store/index'
-let store=useCounterStore()
-
+import { useCounterStore } from '../../store/index'
+let store = useCounterStore()
+let Loading = ref(false)
 const { proxy }: any = getCurrentInstance()
 
 interface HOMEINfo {
@@ -62,16 +72,28 @@ let homeMvinfo: HOMEINfo = reactive({
 
 //获取mv列表
 const getMuseicMVList = async (area: string) => {
-    let result: any = await proxy.$http.getmusicMV(area)
-    store.showLoading()
-    if (result.code !== 200) return proxy.$mes.error("请求数据出错")
+    // let result: any = await proxy.$http.getmusicMV(area)
+    // store.showLoading()
+    // if (result.code !== 200) return proxy.$mes.error("请求数据出错")
 
-    try {
-        store.hideLoading()
+    // try {
+    //     store.hideLoading()
+    //     homeMvinfo['MvList'] = result.data.splice(0, 10)
+    //     Loading
+    // } catch (error) {
+    //     proxy.$mes.error(new Error(error))
+    // }
+    Loading.value=false
+    proxy.$http.getmusicMV(area).then((result)=>{
+        if (result.code !== 200) return proxy.$mes.error("请求数据出错")
         homeMvinfo['MvList'] = result.data.splice(0, 10)
-    } catch (error) {
-        proxy.$mes.error(new Error(error))
-    }
+        // Loading.value = true
+    }).finally(()=>{
+        Loading.value = true
+    })
+
+
+
 }
 
 
@@ -88,17 +110,10 @@ const changeMvtabs = (index: number) => {
     getMuseicMVList(homeMvinfo['Mv_params'])
 }
 
-//移动鼠标图像变大
-const movebig = () => {
-
-}
-
-
 onMounted(() => {
     getMuseicMVList(homeMvinfo['Mv_params'])
     getMuseicMvTabbar()
 })
-
 
 
 

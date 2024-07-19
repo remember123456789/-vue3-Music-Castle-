@@ -94,7 +94,7 @@ const router = useRouter()
 import { useCounterStore } from '../../store/index'
 
 const center = ref()
-const lyricHeight = ref()
+const lyricHeight = ref() 
 let store = useCounterStore()
 
 let songList = reactive({
@@ -150,6 +150,7 @@ const getUserInfo = async () => {
 // 处理歌词
 const setlyc = (lyric) => {
     const value = HandleLyric(lyric)
+    console.log(value);
     store.lyicWords = value
     store.containerHeight = center.value.clientHeight
     store.PHeight = lyricHeight.value.children[0].clientHeight

@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="rank-list">
-                    <span v-for="item in info['list']" @click="slectID(item)">
+                    <span v-for="item in info['list']" :key="item.id" @click="slectID(item)">
                         <h3 style="margin-left: 15px;text-overflow: ellipsis;">{{ item.name }}</h3>
                         <div class="span-image">
                             <img :src="item.coverImgUrl" alt="" style="width: 40px;height: 40px;border-radius: 10px;">

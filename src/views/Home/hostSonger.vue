@@ -6,8 +6,8 @@
             </span>
         </div>
         <div class="Songer-buttom">
-            <router-link :to="{ name: 'singer', query: { id: item.id } }" :class="['songer']" v-for="item in hotSonger['hotList']">
-                <img :src="item.picUrl" alt="">
+            <router-link :to="{ name: 'singer', query: { id: item.id } }" :class="['songer']" v-for="item in hotSonger['hotList']" :key="item.id">
+                <img   :src="item.picUrl" alt="">
             </router-link>
 
         </div>

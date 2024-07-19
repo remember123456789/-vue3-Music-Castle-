@@ -82,12 +82,13 @@ const changeplay = () => {
         // audio 时间变化事件
         audio.addEventListener('timeupdate', Setoffset)
         getMUsic().then(() => {
-            proxy.$mes.success('加载成功')
             audio.play()
             audio_info['urlPic'] = store.pic
             audio_info['name'] = store.name
             audio_info['musicName'] = store.nameMusic
             audio_info['id'] = store.id
+        }).finally(() => {
+            proxy.$mes.success('加载成功')
         })
     }
 

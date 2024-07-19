@@ -1,7 +1,8 @@
 <template>
     <div class="card-big">
-        <el-card class="box-card" v-for="item in TopInfo.TopList">
-            <div class="top-hd">
+        <el-card class="box-card" v-for="item in TopInfo.TopList" :key="item.id">
+            <div v-if="loading">
+                 <div class="top-hd">
                 <router-link :to="{ name: 'Rank', query: { id: 1 } }" :class="['top-hd-title']">
                     {{ item.name }}
                 </router-link>
@@ -24,13 +25,27 @@
 
                 </div>
             </div>
+            </div>
+            <!-- 骨架屏 -->
+            <template  v-else>
+                <el-skeleton style="width: 240px ;display:flex;margin-top: 30px;" v-for="item in 5" animated>
+                    <template #template>
+                        <el-skeleton-item variant="image" style="width: 50px; height: 50px" />
+                        <el-skeleton-item variant="text" style="width: 30%;margin: 20px;" />
+                    </template>
+
+                </el-skeleton>
+            </template>
+
         </el-card>
     </div>
+
+
 </template>
 <script setup lang="ts">
-import { ref, reactive, getCurrentInstance, onMounted } from 'vue';
+import { ref, reactive, getCurrentInstance, onMounted, onActivated } from 'vue';
 const { proxy }: any = getCurrentInstance()
-
+let loading = ref(false)
 let idname = ref()
 interface TOPINFO {
     TopList: Array<any>,
@@ -46,39 +61,24 @@ function getTime(n) {
     return new Date(n).toLocaleString().replace(/\//g, '-')
 }
 const getToplist = async () => {
-    let result: any = await proxy.$http.getmusicMenu()
-    if (result.code !== 200) return proxy.$mes.error("请求数据失败")
-
-    try {
+    loading.value=false
+    proxy.$http.getmusicMenu().then((result) => {
+        if (result.code !== 200) return proxy.$mes.error("请求数据失败")
         TopInfo['TopList'] = result.list.splice(0, 4)
         TopInfo['TopList'].forEach(async (item) => {
             let res = await proxy.$http.getmusicContent(item.id)
             TopInfo['PlayListDetail'][item.id] = res.playlist.tracks.splice(0, 6)
-
+            loading.value = true
         })
-    } catch (error) {
-        // alert(new Error(error.message))
-    }
+    }).finally(() => {
+        // loading.value = tru
+            })
+
 }
-//处理时间函数
-const checkTime = (timestamp: number) => {
-    const date = new Date(timestamp);
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2);
-    const day = ('0' + date.getDate()).slice(-2);
-    const hours = ('0' + date.getHours()).slice(-2);
-    const minutes = ('0' + date.getMinutes()).slice(-2);
-    const seconds = ('0' + date.getSeconds()).slice(-2);
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
-
-
-
 
 onMounted(() => {
     getToplist()
 })
-
 
 </script>
 <style scoped lang="scss">
@@ -91,6 +91,7 @@ onMounted(() => {
 
     .box-card {
         width: 25%;
+        height: 78vh;
         // padding-right: 5px;
         margin-right: 15px;
         border-radius: 10px;

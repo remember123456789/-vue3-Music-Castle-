@@ -1,9 +1,8 @@
 <template>
     <div>
-        <Banner></Banner>
+        <Banner ></Banner>
         <Top></Top>
         <!-- <Album></Album> -->
-
         <HomeMV></HomeMV>
         <footer style="display: flex;">
             <HotDj></HotDj>

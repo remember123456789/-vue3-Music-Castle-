@@ -8,9 +8,9 @@
 
         <div class="dj">
             <router-link :to="{ name: 'song', query: { id: item.id } }" :class="['music-dj']"
-                v-for="item in HotDjInfo.DjList">
+                v-for="item in HotDjInfo.DjList" :key="item.id">
                 <div class="el-img">
-                    <img :src="item.picUrl" alt="">
+                    <img  :src="item.picUrl" alt="">
                 </div>
                 <div class="info">
                     <h1><i><img src="../../assets/音乐，歌单，音符.png" alt="" style="width: 18px;height: 18px;"></i> {{ item.name
