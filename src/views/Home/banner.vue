@@ -1,6 +1,6 @@
 <template>
   <swiper :modules="modules" :slides-per-view="4" :space-between="50" Navigation :pagination="{ clickable: true }">
-    <swiper-slide @click="changeMenu(item)" v-for="(item, index) in banner.value" :key="index"><img :src="item.imageUrl"
+    <swiper-slide  v-for="(item, index) in banner.value" :key="index"><img :src="item.imageUrl"
         alt=""></swiper-slide>
   </swiper>
 </template>
@@ -13,10 +13,8 @@ import { onMounted } from 'vue';
 import { getbanner } from '@/api/server.js'
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { useRoute, useRouter } from 'vue-router';
 const modules = [Navigation, Pagination]
 let banner = reactive([])
-// Import Swiper styles
 import 'swiper/css'
 import 'swiper/scss/navigation';
 import 'swiper/scss/pagination';
@@ -24,22 +22,13 @@ import 'swiper/scss/pagination';
 const getban = async function () {
   const result = await getbanner()
   if (result.code == 200) {
-    //  console.log(result);
     banner.value = result.banners
   }
 }
-let route = useRoute()
-let router = useRouter()
-const changeMenu = (item) => {
-  // window.location.assign(item.url);
-  router.push({ name: 'song', query: { id: item.id } })
-}
 
 onMounted(() => {
-  getban().then(() => { // 输出响应式数组的值需要在 async 函数中完成  
-  });
+  getban()
 })
-// 使用onActive生命周期函数，在组件激活时执行
 
 
 

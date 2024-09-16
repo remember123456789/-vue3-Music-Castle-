@@ -6,18 +6,11 @@
             </span>
         </div>
         <div class="Songer-buttom">
-            <router-link :to="{ name: 'singer', query: { id: item.id } }" :class="['songer']" v-for="item in hotSonger['hotList']" :key="item.id">
-                <img   :src="item.picUrl" alt="">
-            </router-link>
-
+            <div class='songer' v-for="item in hotSonger['hotList']" :key="item.id">
+                <!-- <img  :src="item.picUrl" alt=""> -->
+                <el-image fit="cover" :src="item.picUrl"></el-image>
+            </div>
         </div>
-
-        <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-        </ul>
-
     </el-card>
 </template>
 <script setup>
@@ -48,9 +41,9 @@ onMounted(()=>{
 </script>
 <style scoped lang="scss">
 .box-card {
-    width: 580px;
-    margin: 25px 15px;
-    height: 526px;
+    width: 50%;
+    // margin: 25px 15px;
+    height: 500px;
     border-radius: 10px;
 
     .Songer-buttom {

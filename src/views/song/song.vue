@@ -27,7 +27,7 @@
                     <p v-for="(item, index) in  songList['txt']" v-if="songList['txt'].length != 0"
                         :class="[index == store.index ? 'active' : '']">{{
                             item }}</p>
-                    <p v-else>纯音乐，无歌词</p>
+                    <p v-else >纯音乐，无歌词</p>
                 </div>
             </el-card>
         </div>
@@ -83,7 +83,6 @@
 <script setup >
 import { ref, reactive, getCurrentInstance, onMounted, watchEffect } from 'vue';
 const { proxy } = getCurrentInstance()
-import LyricParser from "lyric-parser";
 import { HandleLyric } from '../../utlis/index'
 // console.log(proxy.$utlis);
 import { useRoute, useRouter } from 'vue-router'
@@ -162,17 +161,9 @@ const setlyc = (lyric) => {
     })
 }
 
-
-
-
 // 相似歌曲跳转
 const changeSmail = (item) => {
     router.push({ name: 'song', query: { id: item.id } })
-}
-
-// 立即播放
-const playMusci = () => {
-    store.flags = !store.flags
 }
 
 watchEffect(() => {

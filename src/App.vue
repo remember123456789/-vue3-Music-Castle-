@@ -8,9 +8,11 @@
         <Header :Flag="FlagOther"></Header>
       </el-header>
       <el-main>
-        <keep-alive>
-           <router-view v-if="$route.meta.keepAlive"></router-view>
-        </keep-alive>
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component"></component>
+          </keep-alive>
+        </router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -34,4 +36,7 @@ const hideInput = (e) => {
 
 
 </script>
-<style scoped></style>
+<style scoped>
+
+
+</style>

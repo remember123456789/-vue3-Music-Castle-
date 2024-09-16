@@ -1,7 +1,6 @@
 <template>
 
-    <el-card class="box-card" >
-
+    <el-card class="box-card">
         <div class="text imtem">
             <span>
                 <h1 style="font-size: 28px;color: #2D2D2D;">最新MV</h1>
@@ -15,40 +14,33 @@
             <router-link class="swperr-bottom" :to="{ name: 'mvsong', query: { id: itemmv.id } }"
                 v-for="itemmv in homeMvinfo.MvList" :key="itemmv.id">
                 <div v-if="Loading">
-                    <div class="el-mv" style="position: relative;" >
-                    <img :src="itemmv.cover" alt="">
-                    <div class="el-top-img">
-                        <img src="../../assets/24gf-playSquare.webp" alt="" style="width: 60px; height: 60px;">
+                    <!-- 播放图片 -->
+
+                    <div class="el-mv">
+                        <el-image class="img" fit="cover" :src="itemmv.cover"></el-image>
                     </div>
+
+                    <div class="el-name" style="color: black;">{{ itemmv.name }}</div>
+                    <div class="el-artname">{{ itemmv.artistName }}</div>
                 </div>
 
-                <div class="el-name" style="color: black;">{{ itemmv.name }}</div>
-                <div class="el-artname">{{ itemmv.artistName }}</div> 
-                </div>
-            
                 <!-- 骨架屏 -->
-         
-                <el-skeleton v-else style="width: 240px"  animated>
-                    <template #template >
+
+                <el-skeleton v-else style="width: 240px" animated>
+                    <template #template>
                         <el-skeleton-item variant="image" style="width: 150px; height: 150px" />
                         <el-skeleton-item variant="text" style="margin-right: 6px" />
                         <el-skeleton-item variant="text" style="width: 20%" />
                     </template>
                 </el-skeleton>
             </router-link>
-
         </div>
-
     </el-card>
-    <!-- <Loading></Loading> -->
-
 </template>
 
 <script setup lang="ts">
 
 import { ref, reactive, getCurrentInstance, onMounted, onActivated } from 'vue';
-// import Loading from '../../components/Loading.vue'
-import { ElLoading } from 'element-plus'
 import { useCounterStore } from '../../store/index'
 let store = useCounterStore()
 let Loading = ref(false)
@@ -72,28 +64,13 @@ let homeMvinfo: HOMEINfo = reactive({
 
 //获取mv列表
 const getMuseicMVList = async (area: string) => {
-    // let result: any = await proxy.$http.getmusicMV(area)
-    // store.showLoading()
-    // if (result.code !== 200) return proxy.$mes.error("请求数据出错")
-
-    // try {
-    //     store.hideLoading()
-    //     homeMvinfo['MvList'] = result.data.splice(0, 10)
-    //     Loading
-    // } catch (error) {
-    //     proxy.$mes.error(new Error(error))
-    // }
-    Loading.value=false
-    proxy.$http.getmusicMV(area).then((result)=>{
+    Loading.value = false
+    proxy.$http.getmusicMV(area).then((result) => {
         if (result.code !== 200) return proxy.$mes.error("请求数据出错")
         homeMvinfo['MvList'] = result.data.splice(0, 10)
-        // Loading.value = true
-    }).finally(()=>{
+    }).finally(() => {
         Loading.value = true
     })
-
-
-
 }
 
 
@@ -120,16 +97,16 @@ onMounted(() => {
 </script>
 <style scoped lang="scss">
 .box-card {
-    width: 1181px;
     margin: 25px 0;
-    height: 526px;
+    height: 30rem;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
 
     .text {
         position: relative;
         display: flex;
         flex-wrap: wrap;
-
 
         .nav {
             display: flex;
@@ -154,24 +131,20 @@ onMounted(() => {
     }
 
     .swperr {
-        width: 1109px;
-        height: 316px;
+        width: 100%;
+        //   grid布局
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        ;
+        grid-gap: 1rem 20px;
 
-        display: flex;
-        flex-wrap: wrap;
-        // flex-direction: row;
-        // justify-content: space-around;
-        margin: 0 -10px;
-
-        // font-size: 0;
         .swperr-bottom {
-            width: 200px;
-            height: 152px;
-            margin: 26px 0;
-            margin-left: 20px;
+            width: 15rem;
+            height: 11rem;
             text-decoration: none;
             color: black;
             font-weight: 700;
+
 
             .el-name {
                 margin-left: 10px;
@@ -195,10 +168,9 @@ onMounted(() => {
         .el-mv {
             width: 200px;
             height: 123px;
-            // background-color: aqua;
             margin: 10px;
 
-            img {
+            .img {
                 width: 100%;
                 height: 100%;
             }
@@ -217,9 +189,6 @@ onMounted(() => {
                 top: 35px;
                 left: 70px;
             }
-
-
-
         }
     }
 }

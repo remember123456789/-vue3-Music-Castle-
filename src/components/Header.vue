@@ -1,8 +1,9 @@
 <template>
     <div class="search">
         <div class="se-input" @blur="showFlag = false">
-            <el-input v-model="input" @focus="showFlag = true" @keyup="langdu" placeholder="请输入歌名、歌词、歌手或专辑"
+            <el-input v-model="input" @focus="showFlag = true" @keyup="throttleEvent" placeholder="请输入歌名、歌词、歌手或专辑"
                 style="width: 250px;height: 40px; border-bottom: 1px solid black;" />
+    
         </div>
         <el-button text @click="dialogTableVisible = true" style="margin-top: 5px;font-size: 16px;">
             登录
@@ -35,7 +36,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref, reactive, type Ref, watchEffect, watch } from 'vue';
+import { ref, reactive, type Ref, watchEffect, watch, onMounted } from 'vue';
 import { type FormInstance, type FormRules, ElMessage } from 'element-plus'
 import { getSearchMusic } from '../api/search/index'
 import { Userlogin } from '../api/login/index'
@@ -46,6 +47,7 @@ const dialogTableVisible = ref(false)
 const dialogFormVisible = ref(false)
 const ruleFormRef = ref<FormInstance>()
 const input = ref('')
+
 const router = useRouter()
 const showFlag: Ref<boolean> = ref(false)
 
@@ -58,32 +60,28 @@ watchEffect(() => {
     }
 })
 
-//搜索
-const langdu = async () => {
-
-    try {
-        const SearchKeywords = await getSearchMusic(input.value)
-        if (SearchKeywords.code == 200) {
-            searchInfo.value = SearchKeywords.result.songs
-        } else {
-            ElMessage({
-                showClose: true,
-                message: '操作过于频繁，请稍后再输入',
-                type: 'warning',
-            })
-        }
-
-    } catch (error) {
-        // ElMessage({
-        //     showClose: true,
-        //     message: 'Warning, this is a warning message.',
-        //     type: 'warning',
-        // })
+//防抖
+function debounce(fn, delay) {
+    let timer = null
+    return (...args) => {
+        clearTimeout(timer)
+        setTimeout(() => {
+            fn.apply(this, args)
+        }, delay)
     }
 }
-// login
+
+//搜索
+const langdu = () => {
+    getSearchMusic(input.value).then((result) => {
+        if (result.code == 200) {
+            searchInfo.value = result.result.songs
+        }
+    })
+}
 
 
+let throttleEvent = debounce(langdu, 1000)
 
 const ruleForm = reactive({
     password: '',
@@ -91,8 +89,8 @@ const ruleForm = reactive({
 })
 
 const rules = reactive<FormRules<typeof ruleForm>>({
-    phone: [{ required: true, message: '宝贝记得输入手机号哦', trigger: 'blur' }],
-    password: [{ required: true, message: '宝贝记得输入密码哦', trigger: 'blur' }],
+    phone: [{ required: true, message: '输入手机号哦', trigger: 'blur' }],
+    password: [{ required: true, message: '输入密码哦', trigger: 'blur' }],
 })
 
 const submitForm = (formEl: FormInstance | undefined) => {

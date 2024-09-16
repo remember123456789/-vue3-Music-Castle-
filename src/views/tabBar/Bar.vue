@@ -13,7 +13,7 @@
             <el-button type="success" @click="changeplay"> <el-icon>
                     <Service />
                 </el-icon>立即播放/暂停</el-button>
-            <audio :src="audio_info['url']" ref="audio" class="audio-sty">11</audio>
+            <audio :src="audio_info['url']" ref="audio" class="audio-sty"></audio>
         </div>
     </div>
 </template>
@@ -36,65 +36,90 @@ let audio_info = reactive({
     musicName: '',
     id: null
 })
-
+//获取音乐url
 const getMUsic = async () => {
     proxy.$mes.error('正在加载中');
-    let result = await proxy.$http.getMusciUrl(route.query.id || audio_info['id'])
-    audio_info['url'] = result.data[0].url
+    proxy.$http.getMusciUrl(route.query.id || audio_info['id']).then((result) => {
+        audio_info['url'] = result.data[0].url
+        audio_info['urlPic'] = store.pic
+        audio_info['name'] = store.name
+        audio_info['musicName'] = store.nameMusic
+        audio_info['id'] = store.id
+    }).finally(() => {
+        proxy.$mes.success('加载成功')
+    })
 }
 
 
 
-// 点击播放     
-const changeplay = () => {
+const changeplay = () => {  
+    let audio = document.querySelector('.audio-sty');  
+    let currentSongId = store.id;  
+  
+    // 检查是否需要切换歌曲  
+    if (currentSongId !== audio_info['id']) {  
+        // 重置音频的 URL（可选，取决于你的需求）  
+        audio.src = '';  
+        // 加载新歌曲  
+        getMUsic().then(() => {  
+            // 更新音频的 src 并播放  
+            audio.src = audio_info['url'];  
+            audio.play();  
+            setupLyric(); // 歌词滚动逻辑  
+            console.log('播放新歌曲');  
+        }).catch(error => {  
+            // 处理加载错误  
+            console.error('加载音乐失败:', error);  
+            proxy.$mes.error('加载失败');  
+        });  
+    } else if (audio.paused) {  
+        // 歌曲未切换，但音频是暂停的，直接播放  
+        if (audio_info['url'].length !== 0) {  
+            audio.play();  
+            setupLyric(); // 歌词滚动逻辑  
+            console.log('继续播放');  
+        } else {  
+            // 理论上这里不应该发生，因为如果 audio_info['url'] 为空，则应该在切换歌曲时加载  
+            console.error('尝试播放但 URL 为空');  
+        }  
+    } else {  
+        // 歌曲未切换，且音频正在播放，执行暂停  
+        audio.pause();  
+        console.log('暂停');  
+    }  
+};
+
+//处理歌词滚动逻辑
+function setupLyric() {
     let audio = document.querySelector('.audio-sty')
-    store.flags = !store.flags
-    if (store.flags == false) {
-        audio.pause();
-    } else {
-
-        // 找到当前这一句歌词的索引
-        function FindIndex() {
-            let currentTime = audio.currentTime
-            for (var i = 0; i < store.lyicWords.length; i++) {
-                if (currentTime < store.lyicWords[i].time) {
-                    return i - 1
-                }
+    audio.addEventListener('timeupdate', Setoffset)
+    // 找到当前这一句歌词的索引
+    function FindIndex() {
+        let currentTime = audio.currentTime
+        for (var i = 0; i < store.lyicWords.length; i++) {
+            if (currentTime < store.lyicWords[i].time) {
+                return i - 1
             }
-            return store.lyicWords.length - 1
         }
-        // 计算偏移量 
-        /**
-         * 偏移量
-         * @containerHeight //容器高度
-         * @PHeight   //单个歌词高度
-         */
-        function Setoffset() {
-            var index = FindIndex()
-            var offset = index * store.PHeight + store.PHeight / 2 - store.containerHeight / 2
-            if (offset < 0) {
-                offset = 0
-            }
-            store.index = index
-            store.Offset = offset
+        return store.lyicWords.length - 1
+    }
+    // 计算偏移量 
+    /**
+     * 偏移量
+     * @containerHeight //容器高度
+     * @PHeight   //单个歌词高度
+     */
+    function Setoffset() {
+        var index = FindIndex()
+        var offset = index * store.PHeight + store.PHeight / 2 - store.containerHeight / 2
+        if (offset < 0) {
+            offset = 0
         }
-
-        // audio 时间变化事件
-        audio.addEventListener('timeupdate', Setoffset)
-        getMUsic().then(() => {
-            audio.play()
-            audio_info['urlPic'] = store.pic
-            audio_info['name'] = store.name
-            audio_info['musicName'] = store.nameMusic
-            audio_info['id'] = store.id
-        }).finally(() => {
-            proxy.$mes.success('加载成功')
-        })
+        store.index = index
+        store.Offset = offset
     }
 
 }
-
-
 
 
 

@@ -25,13 +25,12 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref, reactive, type Ref } from 'vue';
+import { ref, type Ref, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useTheme } from '../hooks/theme'
 const { ThemeChangeColor } = useTheme()
-// let ThemeFlag: Ref<boolean> = ref(true)
-// localStorage.setItem('ThemeFlag', 'true')
-let ThemeFlag: Ref<Storage | boolean | null> = ref(JSON.parse(localStorage.getItem('ThemeFlag')))
+
+let ThemeFlag: Ref<boolean | null> = ref(null)
 
 const router = useRouter()
 const route = useRoute()
@@ -69,27 +68,34 @@ const select = (path: any) => {
     } else {
         router.push(path)
     }
-
-
 }
-const ThemeChange = (e) => {
+const ThemeChange = (e ) => {
     if (e.target.getAttribute('src')) {
         if (e.target.getAttribute('class') == 'bai') {
             ThemeChangeColor('dark')
             localStorage.setItem('ThemeFlag', 'false')
-            ThemeFlag.value = JSON.parse(localStorage.getItem('ThemeFlag'))
-            // ThemeFlag.value = !ThemeFlag.value
             localStorage.setItem('theme', 'dark')
         } else {
             localStorage.setItem('ThemeFlag', 'true')
-            ThemeFlag.value = JSON.parse(localStorage.getItem('ThemeFlag'))
             ThemeChangeColor('')
-            // ThemeFlag.value = !ThemeFlag.value
             localStorage.setItem('theme', '')
         }
+        ThemeFlag.value = JSON.parse(localStorage.getItem('ThemeFlag') as string)
     }
-
 }
+watchEffect(() => {
+    let flag = JSON.parse(localStorage.getItem('ThemeFlag') as string)
+    if (flag == null) {
+        ThemeFlag.value = true
+    } else {
+        ThemeFlag.value = flag
+    }
+})
+
+
+
+
+
 </script>
 <style scoped lang="scss">
 .hea-left {
@@ -183,5 +189,4 @@ const ThemeChange = (e) => {
 
 // .lea-menu ul li:nth-child(1) i {
 //     
-// }
-</style>
+// }</style>

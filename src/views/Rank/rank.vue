@@ -49,7 +49,7 @@
 </template>
 <script setup>
 import SongList from '../../components/songList.vue'
-import { ref, reactive, getCurrentInstance, onMounted, watch, nextTick } from 'vue';
+import { ref, reactive, getCurrentInstance, onMounted, watch, nextTick,onActivated,onDeactivated } from 'vue';
 import { useRouter } from 'vue-router';
 const { proxy } = getCurrentInstance()
 
@@ -91,6 +91,17 @@ const getLIstRANK = async () => {
     }
 }
 
+onActivated(() => {
+  // 调用时机为首次挂载
+  // 以及每次从缓存中被重新插入时
+  console.log('首次载入');
+})
+
+onDeactivated(() => {
+  // 在从 DOM 上移除、进入缓存
+  // 以及组件卸载时调用
+  console.log('组件卸载');
+})
 // 切换选择按钮
 const selectMenu = (type) => {
     info['type'] = type

@@ -33,20 +33,17 @@
                         <el-skeleton-item variant="image" style="width: 50px; height: 50px" />
                         <el-skeleton-item variant="text" style="width: 30%;margin: 20px;" />
                     </template>
-
                 </el-skeleton>
             </template>
-
         </el-card>
     </div>
-
-
 </template>
 <script setup lang="ts">
 import { ref, reactive, getCurrentInstance, onMounted, onActivated } from 'vue';
 const { proxy }: any = getCurrentInstance()
 let loading = ref(false)
 let idname = ref()
+let count=ref(1)
 interface TOPINFO {
     TopList: Array<any>,
     PlayListDetail: any
@@ -83,16 +80,11 @@ onMounted(() => {
 </script>
 <style scoped lang="scss">
 .card-big {
-    width: 1181px;
     width: auto;
-    height: auto;
-
     display: flex;
-
     .box-card {
         width: 25%;
-        height: 78vh;
-        // padding-right: 5px;
+        height: 32rem;
         margin-right: 15px;
         border-radius: 10px;
 
